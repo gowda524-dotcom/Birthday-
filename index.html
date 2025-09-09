@@ -13,6 +13,7 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
+      position: relative;
     }
     .page {
       display: none;
@@ -21,6 +22,7 @@
       justify-content: center;
       text-align: center;
       padding: 20px;
+      z-index: 2;
     }
     .page.active {
       display: flex;
@@ -30,6 +32,7 @@
       color: #fff;
       margin-bottom: 15px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: fadeIn 1.5s ease;
     }
     p {
       font-size: 1.2em;
@@ -41,6 +44,7 @@
       border-radius: 15px;
       margin-bottom: 15px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      animation: zoomIn 1.5s ease;
     }
     audio {
       margin-bottom: 15px;
@@ -59,6 +63,42 @@
     button:hover {
       transform: scale(1.1);
     }
+
+    /* Floating Hearts */
+    .heart {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @keyframes zoomIn {
+      from {transform: scale(0.8); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: fall 4s linear infinite;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(720deg);
+      }
+    }
   </style>
 </head>
 <body>
@@ -74,7 +114,7 @@
     <h1>Happy Birthday Talkative Tangiii 💖♾️</h1>
     <p>Keep Smiling forever — Thank you for being with me.</p>
     <img src="photo1.jpg" alt="Photo 1">
-    <audio src="song1.mp3" autoplay loop controls></audio>
+    <audio id="audio1" src="song1.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
@@ -85,7 +125,7 @@
   <div class="page" id="page2">
     <h1>You are my best sister forever ♾️</h1>
     <img src="photo2.jpg" alt="Photo 2">
-    <audio src="song2.mp3" autoplay loop controls></audio>
+    <audio id="audio2" src="song2.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
@@ -96,17 +136,18 @@
   <div class="page" id="page3">
     <h1>Two Souls 🌍 One Heart 💖</h1>
     <img src="photo3.jpg" alt="Photo 3">
-    <audio src="song3.mp3" autoplay loop controls></audio>
+    <audio id="audio3" src="song3.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
     </div>
   </div>
 
-  <!-- Page 4 (Video Page) -->
+  <!-- Page 4 (Video + Song) -->
   <div class="page" id="page4">
     <h1>Best moment of My Life 🎥</h1>
-    <video src="video.mp4" autoplay loop controls></video>
+    <video src="video.mp4" controls></video>
+    <audio id="audio4" src="song4.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
@@ -117,7 +158,7 @@
   <div class="page" id="page5">
     <h1>You are my best sister forever ♾️</h1>
     <img src="photo5.jpg" alt="Photo 5">
-    <audio src="song5.mp3" autoplay loop controls></audio>
+    <audio id="audio5" src="song5.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
@@ -128,7 +169,7 @@
   <div class="page" id="page6">
     <h1>My Gem 💎</h1>
     <img src="photo6.jpg" alt="Photo 6">
-    <audio src="song6.mp3" autoplay loop controls></audio>
+    <audio id="audio6" src="song6.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
@@ -139,7 +180,7 @@
   <div class="page" id="page7">
     <h1>My Caretaker 🤗</h1>
     <img src="photo7.jpg" alt="Photo 7">
-    <audio src="song7.mp3" autoplay loop controls></audio>
+    <audio id="audio7" src="song7.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
@@ -150,7 +191,7 @@
   <div class="page" id="page8">
     <h1>No one can replace your place, only one Talkative Tangiii 💖♾️</h1>
     <img src="photo8.jpg" alt="Photo 8">
-    <audio src="song8.mp3" autoplay loop controls></audio>
+    <audio id="audio8" src="song8.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
       <button onclick="nextPage()">Next →</button>
@@ -166,20 +207,37 @@
       I promise, you are my forever Tangiiiiiii ❤️
     </h1>
     <img src="photo9.jpg" alt="Photo 9">
-    <audio src="song9.mp3" autoplay loop controls></audio>
+    <audio id="audio9" src="song9.mp3" loop></audio>
     <div>
       <button onclick="prevPage()">← Back</button>
+      <button onclick="restart()">🔄 Restart 🎉</button>
     </div>
   </div>
 
   <script>
     let currentPage = 0;
     const pages = document.querySelectorAll('.page');
+    const audios = document.querySelectorAll('audio');
 
     function showPage(n) {
+      // stop current audio
+      if (audios[currentPage - 1]) {
+        audios[currentPage - 1].pause();
+        audios[currentPage - 1].currentTime = 0;
+      }
+      // hide current page
       pages[currentPage].classList.remove('active');
+      // switch
       currentPage = n;
       pages[currentPage].classList.add('active');
+      // play new audio
+      if (audios[currentPage - 1]) {
+        audios[currentPage - 1].play().catch(()=>{});
+      }
+      // add confetti if last page
+      if (currentPage === 9) {
+        launchConfetti();
+      }
     }
 
     function nextPage() {
@@ -191,6 +249,42 @@
     function prevPage() {
       if (currentPage > 0) {
         showPage(currentPage - 1);
+      }
+    }
+
+    function restart() {
+      // stop last audio
+      if (audios[currentPage - 1]) {
+        audios[currentPage - 1].pause();
+        audios[currentPage - 1].currentTime = 0;
+      }
+      // hide confetti if still on screen
+      document.querySelectorAll(".confetti").forEach(c => c.remove());
+      showPage(0);
+    }
+
+    // Floating hearts
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 10 + "px";
+      heart.innerText = "💖";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }, 800);
+
+    // Confetti
+    function launchConfetti() {
+      for (let i = 0; i < 100; i++) {
+        const conf = document.createElement("div");
+        conf.className = "confetti";
+        conf.style.left = Math.random() * 100 + "vw";
+        conf.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+        conf.style.animationDuration = 2 + Math.random()*3 + "s";
+        conf.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.body.appendChild(conf);
+        setTimeout(() => conf.remove(), 5000);
       }
     }
   </script>
