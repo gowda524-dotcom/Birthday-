@@ -1,293 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Happy Birthday Tangiii</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-    .page {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-      z-index: 2;
-    }
-    .page.active {
-      display: flex;
-    }
-    h1 {
-      font-size: 2em;
-      color: #fff;
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-      animation: fadeIn 1.5s ease;
-    }
-    p {
-      font-size: 1.2em;
-      color: #fff;
-      margin-bottom: 15px;
-    }
-    img, video {
-      max-width: 80%;
-      border-radius: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      animation: zoomIn 1.5s ease;
-    }
-    audio {
-      margin-bottom: 15px;
-    }
-    button {
-      background: linear-gradient(45deg, #ff6ec7, #7873f5);
-      border: none;
-      padding: 10px 20px;
-      margin: 5px;
-      border-radius: 20px;
-      color: white;
-      font-size: 1em;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    button:hover {
-      transform: scale(1.1);
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy Birthday Tangiii 🎂</title>
+<style>
+  :root{
+    --bg1:#ffdde1;
+    --bg2:#ee9ca7;
+    --card:#ffffffdd;
+    --btn1:#ff6ec7;
+    --btn2:#7873f5;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Poppins", system-ui, -apple-system, Arial, sans-serif;
+    background: linear-gradient(135deg,var(--bg1),var(--bg2));
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden; position:relative;
+  }
 
-    /* Floating Hearts */
-    .heart {
-      position: absolute;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 20px;
-      animation: floatUp 6s linear infinite;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0.8); opacity: 1; }
-      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-    }
+  /* Effect layer (behind content) */
+  #fx{
+    position:fixed; inset:0; pointer-events:none; z-index:1;
+    overflow:hidden;
+  }
 
-    /* Animations */
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-    @keyframes zoomIn {
-      from {transform: scale(0.8); opacity: 0;}
-      to {transform: scale(1); opacity: 1;}
-    }
+  /* Content pages */
+  .page{
+    position:relative;
+    z-index:2;
+    width:100%; max-width:880px; padding:18px;
+    display:none; flex-direction:column; align-items:center; text-align:center;
+  }
+  .page.active{display:flex; animation:fadeIn .65s ease}
 
-    /* Confetti */
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      top: -10px;
-      animation: fall 4s linear infinite;
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(100vh) rotate(720deg);
-      }
-    }
-  </style>
+  .card{
+    width:100%;
+    background:var(--card);
+    border-radius:22px; padding:24px;
+    backdrop-filter: blur(6px);
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+    animation:bounceIn .6s ease;
+  }
+
+  h1{
+    margin:0 0 12px; font-size:clamp(22px,5vw,34px);
+    color:#6b2a7d; text-shadow:0 2px 8px rgba(0,0,0,.12);
+  }
+  p{
+    margin:0 0 16px; font-size:clamp(15px,4vw,20px); color:#5a4666;
+  }
+  img, video{
+    width:min(100%,760px); max-height:58vh; object-fit:cover;
+    border-radius:18px; margin:12px auto 14px;
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+    animation:zoomIn .6s ease;
+  }
+  audio{ margin:8px 0 6px }
+
+  .nav{
+    margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  }
+  .btn{
+    background:linear-gradient(45deg,var(--btn1),var(--btn2));
+    color:#fff; border:0; border-radius:999px;
+    padding:12px 18px; cursor:pointer; font-weight:600;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
+    transition:transform .15s ease, filter .2s ease;
+  }
+  .btn:hover{ transform:translateY(-2px) }
+  .btn:active{ transform:translateY(0) scale(.98) }
+
+  /* Cute badges for page labels */
+  .badge{
+    display:inline-block; padding:6px 12px; margin-bottom:12px;
+    background:#fff; border-radius:999px; color:#7a3aa5; font-weight:700;
+    box-shadow:0 6px 14px rgba(0,0,0,.12);
+  }
+
+  /* Animations */
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
+  @keyframes zoomIn{from{opacity:0; transform:scale(.96)} to{opacity:1; transform:scale(1)}}
+  @keyframes bounceIn{
+    0%{transform:translateY(20px); opacity:0}
+    60%{transform:translateY(-6px); opacity:1}
+    100%{transform:translateY(0)}
+  }
+
+  /* Generic float-up for emojis */
+  .float{
+    position:absolute; will-change:transform, opacity;
+    animation:floatUp linear forwards;
+  }
+  @keyframes floatUp{
+    0%{transform:translateY(110vh) translateX(0) scale(.8); opacity:.95}
+    100%{transform:translateY(-15vh) translateX(0) scale(1.3); opacity:0}
+  }
+
+  /* Twinkle for sparkles/stars */
+  .twinkle{
+    position:absolute; width:10px; height:10px; border-radius:50%;
+    background:rgba(255,255,255,.9); box-shadow:0 0 12px 3px rgba(255,255,255,.7);
+    animation:twinkle 1.6s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{transform:scale(.6); opacity:.3}
+    50%{transform:scale(1.3); opacity:1}
+  }
+
+  /* Confetti bits */
+  .confetti{
+    position:absolute; width:10px; height:10px; top:-10px;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(720deg) }
+  }
+
+  /* Firework burst */
+  .firework{
+    position:absolute; width:8px; height:8px; border-radius:50%;
+    animation:burst 900ms ease-out forwards;
+  }
+  @keyframes burst{
+    0%{transform:scale(.2); opacity:1}
+    100%{transform:scale(10); opacity:0}
+  }
+
+  /* Smaller screens tweaks */
+  @media (max-width:480px){
+    .card{padding:18px}
+    img, video{max-height:48vh}
+  }
+</style>
 </head>
 <body>
 
-  <!-- Intro Page -->
-  <div class="page active" id="page0">
-    <h1>For my sweet sister forever 💖♾️</h1>
-    <button onclick="nextPage()">Click here for Surprise 🎁</button>
-  </div>
+  <!-- Effect layer -->
+  <div id="fx"></div>
 
-  <!-- Page 1 -->
-  <div class="page" id="page1">
-    <h1>Happy Birthday Talkative Tangiii 💖♾️</h1>
-    <p>Keep Smiling forever — Thank you for being with me.</p>
-    <img src="photo1.jpg" alt="Photo 1">
-    <audio id="audio1" src="song1.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 0: INTRO (Sparkles) -->
+  <section class="page active" id="page0">
+    <div class="card">
+      <span class="badge">🎀 Welcome</span>
+      <h1>For my sweet sister forever 💖♾️</h1>
+      <p>Tap the button to start your surprise!</p>
+      <div class="nav">
+        <button class="btn" onclick="startExperience()">Click here for Surprise 🎁</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Page 2 -->
-  <div class="page" id="page2">
-    <h1>You are my best sister forever ♾️</h1>
-    <img src="photo2.jpg" alt="Photo 2">
-    <audio id="audio2" src="song2.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 1: BALLOONS -->
+  <section class="page" id="page1">
+    <div class="card">
+      <span class="badge">🎈 Page 1</span>
+      <h1>Happy Birthday Talkative Tangiii 💖♾️</h1>
+      <p>Keep Smiling forever — Thank you for being with me.</p>
+      <img src="photo1.jpg" alt="Photo 1">
+      <audio data-page="1" src="song1.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Page 3 -->
-  <div class="page" id="page3">
-    <h1>Two Souls 🌍 One Heart 💖</h1>
-    <img src="photo3.jpg" alt="Photo 3">
-    <audio id="audio3" src="song3.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 2: HEARTS -->
+  <section class="page" id="page2">
+    <div class="card">
+      <span class="badge">💖 Page 2</span>
+      <h1>You are my best sister forever ♾️</h1>
+      <img src="photo2.jpg" alt="Photo 2">
+      <audio data-page="2" src="song2.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Page 4 (Video + Song) -->
-  <div class="page" id="page4">
-    <h1>Best moment of My Life 🎥</h1>
-    <video src="video.mp4" controls></video>
-    <audio id="audio4" src="song4.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 3: STARS -->
+  <section class="page" id="page3">
+    <div class="card">
+      <span class="badge">🌟 Page 3</span>
+      <h1>Two Souls 🌍 One Heart 💖</h1>
+      <img src="photo3.jpg" alt="Photo 3">
+      <audio data-page="3" src="song3.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Page 5 -->
-  <div class="page" id="page5">
-    <h1>You are my best sister forever ♾️</h1>
-    <img src="photo5.jpg" alt="Photo 5">
-    <audio id="audio5" src="song5.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 4: VIDEO + CONFETTI -->
+  <section class="page" id="page4">
+    <div class="card">
+      <span class="badge">🎉 Page 4</span>
+      <h1>Best moment of My life 🎥</h1>
+      <video src="video.mp4" controls></video>
+      <audio data-page="4" src="song4.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Page 6 -->
-  <div class="page" id="page6">
-    <h1>My Gem 💎</h1>
-    <img src="photo6.jpg" alt="Photo 6">
-    <audio id="audio6" src="song6.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 5: RIBBONS -->
+  <section class="page" id="page5">
+    <div class="card">
+      <span class="badge">🎀 Page 5</span>
+      <h1>You are my best sister forever ♾️</h1>
+      <img src="photo5.jpg" alt="Photo 5">
+      <audio data-page="5" src="song5.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Page 7 -->
-  <div class="page" id="page7">
-    <h1>My Caretaker 🤗</h1>
-    <img src="photo7.jpg" alt="Photo 7">
-    <audio id="audio7" src="song7.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 6: BUTTERFLIES -->
+  <section class="page" id="page6">
+    <div class="card">
+      <span class="badge">🦋 Page 6</span>
+      <h1>My Gem 💎</h1>
+      <img src="photo6.jpg" alt="Photo 6">
+      <audio data-page="6" src="song6.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Page 8 -->
-  <div class="page" id="page8">
-    <h1>No one can replace your place, only one Talkative Tangiii 💖♾️</h1>
-    <img src="photo8.jpg" alt="Photo 8">
-    <audio id="audio8" src="song8.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="nextPage()">Next →</button>
+  <!-- PAGE 7: PETALS -->
+  <section class="page" id="page7">
+    <div class="card">
+      <span class="badge">🌸 Page 7</span>
+      <h1>My Caretaker 🤗</h1>
+      <img src="photo7.jpg" alt="Photo 7">
+      <audio data-page="7" src="song7.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Conclusion -->
-  <div class="page" id="page9">
-    <h1>
-      Once again Happy Birthday Talkative Tangiii 💖♾️<br>
-      Akkowww 🌍, Amma 💎<br>
-      Thank you for being with me.<br>
-      I promise, you are my forever Tangiiiiiii ❤️
-    </h1>
-    <img src="photo9.jpg" alt="Photo 9">
-    <audio id="audio9" src="song9.mp3" loop></audio>
-    <div>
-      <button onclick="prevPage()">← Back</button>
-      <button onclick="restart()">🔄 Restart 🎉</button>
+  <!-- PAGE 8: DIAMOND SPARKLES -->
+  <section class="page" id="page8">
+    <div class="card">
+      <span class="badge">💎 Page 8</span>
+      <h1>No one can replace your place, only one Talkative Tangiii 💖♾️</h1>
+      <img src="photo8.jpg" alt="Photo 8">
+      <audio data-page="8" src="song8.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="nextPage()">Next →</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <script>
-    let currentPage = 0;
-    const pages = document.querySelectorAll('.page');
-    const audios = document.querySelectorAll('audio');
+  <!-- PAGE 9: CONCLUSION (FIREWORKS + CONFETTI) -->
+  <section class="page" id="page9">
+    <div class="card">
+      <span class="badge">🎆 Finale</span>
+      <h1>
+        Once again Happy Birthday Talkative Tangiii 💖♾️<br/>
+        Akkowww 🌍, Amma 💎<br/>
+        Thank you for being with me.<br/>
+        I promise, you are my forever Tangiiiiiii ❤️
+      </h1>
+      <img src="photo9.jpg" alt="Photo 9">
+      <audio data-page="9" src="song9.mp3" loop></audio>
+      <div class="nav">
+        <button class="btn" onclick="prevPage()">← Back</button>
+        <button class="btn" onclick="restart()">🔄 Restart 🎉</button>
+      </div>
+    </div>
+  </section>
 
-    function showPage(n) {
-      // stop current audio
-      if (audios[currentPage - 1]) {
-        audios[currentPage - 1].pause();
-        audios[currentPage - 1].currentTime = 0;
-      }
-      // hide current page
-      pages[currentPage].classList.remove('active');
-      // switch
-      currentPage = n;
-      pages[currentPage].classList.add('active');
-      // play new audio
-      if (audios[currentPage - 1]) {
-        audios[currentPage - 1].play().catch(()=>{});
-      }
-      // add confetti if last page
-      if (currentPage === 9) {
-        launchConfetti();
-      }
+<script>
+  /* ====== NAV / AUDIO CONTROL ====== */
+  let currentPage = 0;
+  const pages = [...document.querySelectorAll('.page')];
+  const fx = document.getElementById('fx');
+  let effectTimers = [];    // setInterval / setTimeout handles
+  let effectNodes = [];     // created DOM nodes to remove later
+
+  const audioMap = {};
+  document.querySelectorAll('audio[data-page]').forEach(a=>{
+    const p = +a.getAttribute('data-page');
+    audioMap[p] = a;
+    a.volume = 0.9;
+  });
+
+  function clearEffects(){
+    effectTimers.forEach(id=>clearInterval(id));
+    effectTimers = [];
+    effectNodes.forEach(n=>n.remove());
+    effectNodes = [];
+    fx.innerHTML = "";
+  }
+
+  function stopAudio(pageIndex){
+    const a = audioMap[pageIndex];
+    if(!a) return;
+    a.pause();
+    a.currentTime = 0;
+  }
+
+  function playAudio(pageIndex){
+    const a = audioMap[pageIndex];
+    if(!a) return;
+    // Ensure not multiple playing
+    Object.keys(audioMap).forEach(k=>{ if(+k!==pageIndex) stopAudio(+k); });
+    a.play().catch(()=>{ /* ignored if blocked */ });
+  }
+
+  function showPage(n){
+    // stop audio for old page
+    if(currentPage>0) stopAudio(currentPage);
+
+    // hide old & clear effects
+    pages[currentPage].classList.remove('active');
+    clearEffects();
+
+    // switch
+    currentPage = n;
+    pages[currentPage].classList.add('active');
+
+    // start effects for new page
+    applyEffects(currentPage);
+
+    // play audio if content page (after first interaction this will work)
+    if(currentPage>0) playAudio(currentPage);
+
+    // finale extras
+    if(currentPage===9){
+      finaleBurst();
+      smallConfettiRain(140);
     }
+  }
 
-    function nextPage() {
-      if (currentPage < pages.length - 1) {
-        showPage(currentPage + 1);
-      }
+  function nextPage(){
+    if(currentPage < pages.length-1) showPage(currentPage+1);
+  }
+  function prevPage(){
+    if(currentPage > 0) showPage(currentPage-1);
+  }
+
+  // Intro button — counts as user gesture to allow audio autoplay afterwards
+  function startExperience(){
+    showPage(1); // show first page
+    playAudio(1); // try to start immediately after click
+  }
+
+  function restart(){
+    stopAudio(currentPage);
+    clearEffects();
+    showPage(0);
+  }
+
+  /* ====== EFFECT HELPERS ====== */
+  function rand(min,max){ return Math.random()*(max-min)+min }
+
+  function addNode(el){
+    effectNodes.push(el);
+    fx.appendChild(el);
+    return el;
+  }
+  function addInterval(fn, ms){
+    const id = setInterval(fn, ms);
+    effectTimers.push(id);
+    return id;
+  }
+  function addTimeout(fn, ms){
+    const id = setTimeout(fn, ms);
+    effectTimers.push(id);
+    return id;
+  }
+
+  /* Sparkles (intro / page 8 variant uses diamond emoji) */
+  function sparkles(count=50){
+    for(let i=0;i<count;i++){
+      const s = document.createElement('div');
+      s.className='twinkle';
+      s.style.left = rand(0,100)+'vw';
+      s.style.top  = rand(0,100)+'vh';
+      s.style.width = s.style.height = rand(5,10)+'px';
+      s.style.animationDelay = rand(0,1.6)+'s';
+      addNode(s);
     }
+  }
 
-    function prevPage() {
-      if (currentPage > 0) {
-        showPage(currentPage - 1);
+  /* Emoji floaters (generic) */
+  function emojiFloat(emoji, every=500, sizeMin=18, sizeMax=42, drift=true){
+    const spawner = ()=> {
+      const e = document.createElement('div');
+      e.className='float';
+      e.textContent = emoji;
+      e.style.left = rand(0,100)+'vw';
+      e.style.fontSize = rand(sizeMin,sizeMax)+'px';
+      e.style.animationDuration = rand(5,9)+'s';
+      if(drift){
+        const dx = rand(-30,30);
+        e.animate(
+          [
+            { transform:`translate(${dx>0?0:dx}px, 110vh)`, opacity:.95 },
+            { transform:`translate(${dx}px, -15vh)`, opacity:0 }
+          ],
+          { duration: (rand(5,9))*1000, easing:'linear', fill:'forwards' }
+        );
       }
+      addNode(e);
+      addTimeout(()=>e.remove(), 10000);
+    };
+    spawner();
+    addInterval(spawner, every);
+  }
+
+  /* Confetti rain */
+  function smallConfettiRain(n=80){
+    for(let i=0;i<n;i++){
+      const c = document.createElement('div');
+      c.className='confetti';
+      c.style.left = rand(0,100)+'vw';
+      c.style.backgroundColor = `hsl(${rand(0,360)},100%,55%)`;
+      c.style.width = c.style.height = rand(6,12)+'px';
+      c.style.animationDuration = rand(2.2,4.8)+'s';
+      c.style.transform = `rotate(${rand(0,360)}deg)`;
+      addNode(c);
+      addTimeout(()=>c.remove(), 6000);
     }
+  }
 
-    function restart() {
-      // stop last audio
-      if (audios[currentPage - 1]) {
-        audios[currentPage - 1].pause();
-        audios[currentPage - 1].currentTime = 0;
-      }
-      // hide confetti if still on screen
-      document.querySelectorAll(".confetti").forEach(c => c.remove());
-      showPage(0);
+  /* Firework burst (finale) */
+  function finaleBurst(){
+    for(let i=0;i<10;i++){
+      const fw = document.createElement('div');
+      fw.className='firework';
+      fw.style.left = rand(10,90)+'vw';
+      fw.style.top  = rand(20,60)+'vh';
+      fw.style.background = `hsl(${rand(0,360)},100%,60%)`;
+      addNode(fw);
+      addTimeout(()=>fw.remove(), 1100);
     }
+  }
 
-    // Floating hearts
-    setInterval(() => {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 20 + 10 + "px";
-      heart.innerText = "💖";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 6000);
-    }, 800);
-
-    // Confetti
-    function launchConfetti() {
-      for (let i = 0; i < 100; i++) {
-        const conf = document.createElement("div");
-        conf.className = "confetti";
-        conf.style.left = Math.random() * 100 + "vw";
-        conf.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
-        conf.style.animationDuration = 2 + Math.random()*3 + "s";
-        conf.style.transform = `rotate(${Math.random()*360}deg)`;
-        document.body.appendChild(conf);
-        setTimeout(() => conf.remove(), 5000);
-      }
+  /* ====== PER-PAGE EFFECT LOGIC ====== */
+  function applyEffects(page){
+    switch(page){
+      case 0: // sparkles
+        sparkles(60);
+        break;
+      case 1: // balloons
+        emojiFloat('🎈', 380, 20, 52, true);
+        smallConfettiRain(16); // subtle
+        break;
+      case 2: // hearts
+        emojiFloat('💖', 420, 18, 44, true);
+        break;
+      case 3: // stars twinkle + float
+        sparkles(40);
+        emojiFloat('⭐', 520, 16, 36, false);
+        break;
+      case 4: // confetti + video page
+        smallConfettiRain(120);
+        break;
+      case 5: // ribbons
+        emojiFloat('🎀', 520, 18, 38, true);
+        break;
+      case 6: // butterflies
+        emojiFloat('🦋', 480, 18, 40, true);
+        break;
+      case 7: // petals
+        emojiFloat('🌸', 420, 18, 40, true);
+        break;
+      case 8: // diamond sparkles
+        emojiFloat('💎', 520, 18, 34, false);
+        sparkles(30);
+        break;
+      case 9: // finale fireworks + confetti (extra is triggered in showPage)
+        break;
     }
-  </script>
+  }
 
+  // Initialize intro effects
+  applyEffects(0);
+</script>
 </body>
 </html>
