@@ -11,7 +11,6 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            /* Deep Celebration Background */
             background: radial-gradient(circle at bottom center, #4a1a55 0%, #1a0b2e 60%, #000000 100%);
             min-height: 100vh;
             display: flex;
@@ -44,8 +43,10 @@
         .container {
             position: relative;
             z-index: 10;
-            opacity: 0; /* Hidden initially */
-            animation: fadeInContainer 2s ease-out forwards 0.5s;
+            opacity: 0; 
+            animation: fadeInContainer 1s ease-out forwards 0.5s; /* Faster fade in */
+            width: 100%;
+            max-width: 500px;
         }
         @keyframes fadeInContainer { to { opacity: 1; } }
 
@@ -53,14 +54,13 @@
         .photo-frame {
             width: 280px;
             height: 380px;
-            margin: 0 auto 40px;
+            margin: 0 auto 30px;
             padding: 10px;
-            /* Platinum and Gold Gradient */
             background: linear-gradient(135deg, #e5e4e2, #ffd700, #e5e4e2, #bfa85c);
             border-radius: 20px;
             box-shadow: 0 0 60px rgba(255, 215, 0, 0.6), inset 0 0 20px rgba(255,255,255,0.5);
             transform: scale(0);
-            animation: blastIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.5s;
+            animation: blastIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.5s;
         }
 
         .photo-frame img {
@@ -71,28 +71,28 @@
         @keyframes blastIn { 0% { transform: scale(0) rotate(-10deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
 
         /* --- TEXT TYPOGRAPHY --- */
-        .text-area { margin-bottom: 40px; }
+        .text-area { margin-bottom: 30px; }
 
         .line {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
             animation: fadeInUp 1s ease-out forwards;
         }
 
-        .line-1 { font-size: 1.3rem; font-weight: 400; animation-delay: 2s; color: #e0e0e0; }
-        .line-2 { font-size: 1.6rem; font-weight: 700; animation-delay: 3.5s; color: #ffd700; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .line-1 { font-size: 1.2rem; font-weight: 400; animation-delay: 1.5s; color: #e0e0e0; }
+        .line-2 { font-size: 1.4rem; font-weight: 700; animation-delay: 2.5s; color: #ffd700; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
         
         .main-line {
             font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            margin-top: 25px;
+            font-size: 2.5rem;
+            margin-top: 20px;
             background: linear-gradient(to right, #ff69b4, #ffd700, #ff00cc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
             opacity: 0;
             transform: scale(0.8);
-            animation: grandReveal 1.5s ease-out forwards 5s, heartbeat 2s infinite 6.5s;
+            animation: grandReveal 1.5s ease-out forwards 3.5s, heartbeat 2s infinite 5s;
         }
 
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
@@ -100,14 +100,27 @@
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); filter: brightness(1.2); } }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* --- NEXT BUTTON --- */
+        /* --- NEXT BUTTON (FIXED) --- */
+        .next-btn-container {
+            margin-top: 20px;
+            z-index: 100; /* High Z-index to ensure clickability */
+            position: relative;
+        }
+
         .next-btn {
+            display: inline-block;
             padding: 15px 50px;
             background: linear-gradient(90deg, #ff00cc, #ffd700);
             color: white; font-weight: bold; border-radius: 50px; text-decoration: none;
             box-shadow: 0 0 30px rgba(255, 0, 204, 0.6);
             opacity: 0;
-            animation: fadeInUp 1s ease-out forwards 7s; /* Appears last */
+            animation: fadeInUp 1s ease-out forwards 4s; /* Appears much faster now */
+            cursor: pointer;
+        }
+        
+        .next-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(255, 0, 204, 0.9);
         }
 
     </style>
@@ -132,7 +145,9 @@
             <h1 class="main-line">My Forever Tangiiiiiiiiiiii 💖♾️</h1>
         </div>
 
-        <a href="page9.html" class="next-btn">The Final Wish →</a>
+        <div class="next-btn-container">
+            <a href="page9.html" class="next-btn">The Final Wish →</a>
+        </div>
     </div>
 
     <audio id="bg-music" loop>
@@ -154,8 +169,8 @@
                 color: colors[Math.floor(Math.random() * colors.length)],
                 radius: Math.random() * 6 + 2,
                 velocity: {
-                    x: (Math.random() - 0.5) * 15, // Explosive spread X
-                    y: (Math.random() - 0.5) * 15 - 10 // Explosive spread Y (upward bias)
+                    x: (Math.random() - 0.5) * 15, 
+                    y: (Math.random() - 0.5) * 15 - 10 
                 },
                 gravity: 0.2,
                 opacity: 1,
@@ -166,7 +181,6 @@
 
         function animateBlast() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Use wider loop for performance during blast
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
                 p.velocity.y += p.gravity;
@@ -179,7 +193,6 @@
                 ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${p.opacity})`;
                 ctx.fill();
 
-                // Remove faded particles
                 if (p.opacity <= 0) {
                     particles.splice(i, 1);
                     i--;
@@ -190,7 +203,6 @@
             }
         }
 
-        // Helper for colors
         function hexToRgb(hex) {
             const bigint = parseInt(hex.slice(1), 16);
             const r = (bigint >> 16) & 255;
@@ -200,19 +212,15 @@
         }
 
         function triggerBigBlast() {
-            // Create 400 particles from the center
             for (let i = 0; i < 400; i++) {
                 createParticle(window.innerWidth / 2, window.innerHeight / 2);
             }
             animateBlast();
         }
 
-        // --- PAGE LOGIC ---
         function startGrandFinale() {
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('bg-music').play();
-            
-            // Trigger the visual effects immediately
             triggerBigBlast();
         }
 
