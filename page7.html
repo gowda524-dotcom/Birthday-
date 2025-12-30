@@ -3,315 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Identity Check 🕵️‍♀️</title>
+    <title>Magic Canvas 🎨</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Poppins:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@600&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Share Tech Mono', monospace;
-            background-color: #050505;
-            background-image: 
-                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
-            min-height: 100vh;
+            background-color: #080808;
+            color: white;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #0f0;
+            min-height: 100vh;
             overflow: hidden;
-            user-select: none;
+            touch-action: none; /* Prevent scrolling while drawing */
+        }
+
+        /* --- TITLE --- */
+        .header {
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            background: linear-gradient(to right, #ff00cc, #333399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        p { font-size: 0.9rem; color: #888; }
+
+        /* --- CANVAS --- */
+        #drawing-canvas {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 0, 204, 0.2);
+            cursor: crosshair;
+        }
+
+        /* --- CONTROLS --- */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .clear-btn {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+        }
+        .done-btn {
+            background: linear-gradient(45deg, #ff00cc, #a18cd1);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 0, 204, 0.4);
+        }
+
+        button:active { transform: scale(0.95); }
+
+        /* --- RESULT OVERLAY --- */
+        #result-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            animation: fadeIn 1s;
+        }
+
+        .analyzing-text {
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+            margin-bottom: 20px;
+        }
+
+        .final-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ff69b4;
+            text-align: center;
+            line-height: 1.5;
+            text-shadow: 0 0 20px #ff69b4;
+            transform: scale(0);
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .show-msg { transform: scale(1); }
+
+        .next-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: white;
+            color: black;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 1s;
         }
 
         /* --- START SCREEN --- */
         #start-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.95); z-index: 100;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; cursor: pointer; color: white; font-family: 'Poppins', sans-serif;
-        }
-
-        /* --- SCANNER CONTAINER --- */
-        .scanner-container {
-            position: relative;
-            width: 250px;
-            height: 350px;
-            border: 2px solid #0f0;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 20, 0, 0.6);
-            transition: all 0.3s;
-        }
-
-        .scanner-container.success {
-            border-color: #00ffff;
-            box-shadow: 0 0 50px #00ffff;
-        }
-
-        /* --- FINGERPRINT ICON --- */
-        .fingerprint {
-            font-size: 8rem;
-            color: rgba(0, 255, 0, 0.3);
             cursor: pointer;
-            transition: color 0.3s, transform 0.1s;
-            position: relative;
-            z-index: 2;
         }
 
-        .fingerprint:active { transform: scale(0.95); }
-        .scanning .fingerprint { color: rgba(0, 255, 0, 0.8); }
-
-        /* --- SCANNING BEAM --- */
-        .scan-line {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 5px;
-            background: #0f0;
-            box-shadow: 0 0 15px #0f0;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .scanning .scan-line {
-            opacity: 1;
-            animation: scanAnim 1.5s linear infinite;
-        }
-
-        @keyframes scanAnim {
-            0% { top: 10%; }
-            50% { top: 90%; }
-            100% { top: 10%; }
-        }
-
-        /* --- TEXT STATUS --- */
-        .status-box {
-            margin-top: 30px;
-            text-align: center;
-            height: 60px;
-        }
-        
-        .status-text {
-            font-size: 1.2rem;
-            color: #0f0;
-            text-shadow: 0 0 5px #0f0;
-        }
-        
-        .sub-text {
-            font-size: 0.9rem;
-            color: rgba(0, 255, 0, 0.6);
-            margin-top: 5px;
-        }
-
-        /* --- RESULT SCREEN (Hidden initially) --- */
-        #result-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            animation: fadeIn 0.5s;
-        }
-
-        h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 3rem;
-            color: #fff;
-            text-shadow: 0 0 20px #00ffff;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .profile-pic {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            border: 4px solid #00ffff;
-            box-shadow: 0 0 30px #00ffff;
-            margin-bottom: 20px;
-            object-fit: cover;
-            /* Placeholder background if no image */
-            background: #333; 
-        }
-
-        .next-btn {
-            padding: 15px 40px;
-            background: #00ffff;
-            color: #000;
-            font-family: 'Poppins', sans-serif;
-            font-weight: bold;
-            font-size: 1.2rem;
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 0 20px #00ffff;
-            animation: pulseBtn 1s infinite;
-        }
-        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        /* --- CANVAS FOR CONFETTI --- */
-        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 200; }
+        /* --- CONFETTI CANVAS --- */
+        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; }
 
     </style>
 </head>
 <body>
 
-    <div id="start-screen" onclick="initPage()">
-        <h2>🔒 SECURITY CHECK</h2>
-        <p>Tap to Verify Identity</p>
+    <div id="start-screen" onclick="startApp()">
+        <h1 style="color: #ff00cc; font-family: 'Dancing Script'; font-size: 3rem;">Magic Art 🎨</h1>
+        <p style="color:white; margin-top:10px;">Draw something for your brother...</p>
+        <p style="color:gray;">(Tap to Start)</p>
     </div>
 
-    <div class="scanner-container" id="scanner">
-        <div class="scan-line"></div>
-        <div class="fingerprint" id="finger-btn">👆</div>
+    <div class="header">
+        <h2>Draw a Heart ❤️</h2>
+        <p>Use your finger/mouse to draw!</p>
     </div>
 
-    <div class="status-box">
-        <div class="status-text" id="main-status">SYSTEM LOCKED</div>
-        <div class="sub-text" id="sub-status">Press & Hold Fingerprint to Scan</div>
+    <canvas id="drawing-canvas"></canvas>
+
+    <div class="controls">
+        <button class="clear-btn" onclick="clearCanvas()">Clear</button>
+        <button class="done-btn" onclick="finishDrawing()">I'm Done!</button>
     </div>
 
     <div id="result-overlay">
-        <h1>ACCESS GRANTED</h1>
-        <h2 style="color:#00ffff; font-family:'Poppins'; margin-bottom:30px;">Identity: The Talkative Don 😎</h2>
+        <h3 class="analyzing-text" id="status-text">ANALYZING ART...</h3>
         
-        <a href="page8.html" class="next-btn">Enter VIP Zone →</a>
+        <div class="final-message" id="final-msg">
+            "I Love My Brother!"<br>
+            <span style="font-size: 1.5rem; color: white;">- Signed by Tangii ✍️</span>
+        </div>
+        
+        <a href="page9.html" class="next-btn" id="next-btn">Aww, I knew it! 😎 →</a>
     </div>
 
     <canvas id="confetti-canvas"></canvas>
 
-    <audio id="scan-sound" loop>
-        <source src="T7.mp3" type="audio/mpeg">
+    <audio id="bg-music" loop>
+        <source src="T8.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // --- LOGIC ---
-        let holdTimer = null;
-        let progress = 0;
-        const fingerBtn = document.getElementById('finger-btn');
-        const scanner = document.getElementById('scanner');
-        const mainStatus = document.getElementById('main-status');
-        const subStatus = document.getElementById('sub-status');
-        const scanSound = document.getElementById('scan-sound');
-        const resultOverlay = document.getElementById('result-overlay');
-
-        function initPage() {
-            document.getElementById('start-screen').style.display = 'none';
-        }
-
-        // --- MOUSE / TOUCH EVENTS ---
-        fingerBtn.addEventListener('mousedown', startScan);
-        fingerBtn.addEventListener('touchstart', startScan); // For mobile
-
-        fingerBtn.addEventListener('mouseup', stopScan);
-        fingerBtn.addEventListener('mouseleave', stopScan);
-        fingerBtn.addEventListener('touchend', stopScan); // For mobile
-
-        function startScan(e) {
-            e.preventDefault(); // Prevent text selection
-            scanner.classList.add('scanning');
-            scanSound.currentTime = 0;
-            scanSound.play();
-            
-            mainStatus.innerText = "SCANNING BIOMETRICS...";
-            mainStatus.style.color = "#0f0";
-            
-            // Reset Progress logic
-            progress = 0;
-            holdTimer = setInterval(scanProgress, 100); // Check every 100ms
-        }
-
-        function stopScan() {
-            clearInterval(holdTimer);
-            scanner.classList.remove('scanning');
-            scanSound.pause();
-            
-            if (progress < 100) {
-                mainStatus.innerText = "SCAN FAILED ❌";
-                mainStatus.style.color = "red";
-                subStatus.innerText = "Please hold until completion";
-                setTimeout(() => {
-                    mainStatus.innerText = "SYSTEM LOCKED";
-                    mainStatus.style.color = "#0f0";
-                    subStatus.innerText = "Press & Hold Fingerprint to Scan";
-                }, 1500);
-            }
-        }
-
-        function scanProgress() {
-            progress += 2.5; // Increases progress (takes about 4 seconds)
-
-            // Dynamic Text Updates
-            if (progress > 20 && progress < 50) {
-                mainStatus.innerText = "ANALYZING CUTENESS...";
-                subStatus.innerText = "Levels: 100%";
-            } else if (progress > 50 && progress < 80) {
-                mainStatus.innerText = "DETECTING MADNESS...";
-                subStatus.innerText = "Warning: High Voltage!";
-            } else if (progress > 80 && progress < 99) {
-                mainStatus.innerText = "VERIFYING TALKATIVE DON...";
-                subStatus.innerText = "Match found!";
-            }
-
-            if (progress >= 100) {
-                clearInterval(holdTimer);
-                scanSuccess();
-            }
-        }
-
-        function scanSuccess() {
-            scanner.classList.remove('scanning');
-            scanner.classList.add('success');
-            scanSound.pause();
-            
-            mainStatus.innerText = "VERIFIED ✔";
-            subStatus.innerText = "Welcome, Queen.";
-            
-            // Grand Blast & Overlay
-            launchConfetti();
-            setTimeout(() => {
-                resultOverlay.style.display = 'flex';
-            }, 800);
-        }
-
-        // --- CONFETTI LOGIC ---
-        const canvas = document.getElementById('confetti-canvas');
+        // --- CANVAS SETUP ---
+        const canvas = document.getElementById('drawing-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let painting = false;
+
+        // Set canvas size (Responsive)
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * 0.9;
+            canvas.height = window.innerHeight * 0.7;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Brush Style
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.shadowBlur = 10;
+        let hue = 0;
+
+        function startPosition(e) {
+            painting = true;
+            draw(e);
+        }
+
+        function endPosition() {
+            painting = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!painting) return;
+
+            e.preventDefault(); // Prevent scrolling on touch
+
+            // Get mouse/touch position
+            let clientX, clientY;
+            if(e.type.includes('touch')) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            // Adjust for canvas position
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            // Rainbow Colors
+            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+            ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
+            
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+
+            hue++;
+            if (hue >= 360) hue = 0;
+        }
+
+        // Event Listeners
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mousemove', draw);
+        
+        canvas.addEventListener('touchstart', startPosition);
+        canvas.addEventListener('touchend', endPosition);
+        canvas.addEventListener('touchmove', draw);
+
+        // --- APP LOGIC ---
+        function startApp() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('bg-music').play();
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function finishDrawing() {
+            const overlay = document.getElementById('result-overlay');
+            const statusText = document.getElementById('status-text');
+            const finalMsg = document.getElementById('final-msg');
+            const nextBtn = document.getElementById('next-btn');
+
+            overlay.style.display = 'flex';
+
+            // Sequence
+            setTimeout(() => { statusText.innerText = "DETECTING HIDDEN MEANING..."; }, 1500);
+            setTimeout(() => { statusText.innerText = "TRANSLATING..."; }, 3000);
+            
+            setTimeout(() => { 
+                statusText.style.display = 'none'; // Hide analyzing text
+                finalMsg.classList.add('show-msg'); // Show Message
+                launchConfetti(); // Celebration
+            }, 4500);
+
+            setTimeout(() => {
+                nextBtn.style.opacity = '1';
+                nextBtn.style.pointerEvents = 'auto';
+            }, 6000);
+        }
+
+        // --- CONFETTI ---
+        const cCanvas = document.getElementById('confetti-canvas');
+        const cCtx = cCanvas.getContext('2d');
+        cCanvas.width = window.innerWidth; cCanvas.height = window.innerHeight;
         let confetti = [];
 
         function launchConfetti() {
-            for(let i=0; i<150; i++) {
+            for(let i=0; i<100; i++) {
                 confetti.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    color: Math.random() > 0.5 ? '#00ffff' : '#0f0',
-                    size: Math.random() * 5 + 2,
-                    speed: Math.random() * 5 + 5
+                    x: Math.random() * cCanvas.width,
+                    y: Math.random() * cCanvas.height - cCanvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    size: Math.random() * 5 + 3,
+                    speed: Math.random() * 5 + 2
                 });
             }
             animateConfetti();
         }
 
         function animateConfetti() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            confetti.forEach((p, i) => {
+            cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+            confetti.forEach((p) => {
                 p.y += p.speed;
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-                ctx.fill();
+                cCtx.fillStyle = p.color;
+                cCtx.beginPath();
+                cCtx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                cCtx.fill();
             });
             requestAnimationFrame(animateConfetti);
         }
-
     </script>
 </body>
 </html>
