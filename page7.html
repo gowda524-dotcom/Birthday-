@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memories with my Sister 💖♾️</title>
+    <title>Memories with my Talkative Tangii 💖♾️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
 
@@ -32,7 +32,7 @@
         /* --- TITLE --- */
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: #ffd700; /* Gold */
             margin-top: 20px;
             text-align: center;
@@ -60,7 +60,7 @@
         video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ensures video fills space */
+            object-fit: cover;
             border-radius: 10px;
             border: 2px solid black;
         }
@@ -68,8 +68,8 @@
         /* --- SLIDESHOW SECTION --- */
         .slideshow-wrapper {
             width: 100%;
-            margin-top: 20px;
-            overflow: hidden; /* Hides scrollbar */
+            margin-top: 10px;
+            overflow: hidden;
             position: relative;
             z-index: 10;
             background: rgba(255,255,255,0.05);
@@ -81,34 +81,27 @@
         .marquee {
             display: flex;
             gap: 15px;
-            width: max-content; /* Allows content to stretch */
+            width: max-content;
             animation: scrollLeft 25s linear infinite;
         }
 
-        .marquee:hover {
-            animation-play-state: paused; /* Pauses on hover */
-        }
-
         .slide-img {
-            height: 180px; /* Adjust height based on preference */
+            height: 150px; /* Adjusted height */
             width: auto;
             border-radius: 10px;
             border: 3px solid white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
         }
-
-        .slide-img:hover { transform: scale(1.1); border-color: #ffd700; }
 
         @keyframes scrollLeft {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Move half way because we duplicated images */
+            100% { transform: translateX(-50%); }
         }
 
-        /* --- NEXT BUTTON --- */
+        /* --- NEXT BUTTON (Initially Hidden) --- */
         .next-btn {
             margin-top: 30px;
-            display: inline-block;
+            display: none; /* HIDDEN INITIALLY */
             padding: 15px 50px;
             background: linear-gradient(90deg, #ff00cc, #333399);
             color: white;
@@ -118,9 +111,14 @@
             font-size: 1.1rem;
             box-shadow: 0 0 20px rgba(255, 0, 204, 0.5);
             z-index: 10;
-            animation: pulseBtn 2s infinite;
+            animation: popIn 1s forwards;
         }
-        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         /* --- START SCREEN --- */
         #start-screen {
@@ -140,13 +138,13 @@
 
     <div id="start-screen" onclick="startPage()">
         <h1>Memories... 📸</h1>
-        <p>Tap to Play Video & Slideshow ✨</p>
+        <p>Tap to Watch Video ✨</p>
     </div>
 
     <h1>Memories with my sister 💖</h1>
 
     <div class="video-container">
-        <video id="memory-video" playsinline loop muted>
+        <video id="memory-video" playsinline>
             <source src="T7.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -154,41 +152,21 @@
 
     <div class="slideshow-wrapper">
         <div class="marquee">
-            <img src="T7_1.jpg" class="slide-img" alt="1">
-            <img src="T7_2.jpg" class="slide-img" alt="2">
-            <img src="T7_3.jpg" class="slide-img" alt="3">
-            <img src="T7_4.jpg" class="slide-img" alt="4">
-            <img src="T7_5.jpg" class="slide-img" alt="5">
-            <img src="T7_6.jpg" class="slide-img" alt="6">
-            <img src="T7_7.jpg" class="slide-img" alt="7">
-            <img src="T7_8.jpg" class="slide-img" alt="8">
-            <img src="T7_9.jpg" class="slide-img" alt="9">
-            <img src="T7_10.jpg" class="slide-img" alt="10">
-            <img src="T7_11.jpg" class="slide-img" alt="11">
-            <img src="T7_12.jpg" class="slide-img" alt="12">
-            <img src="T7_13.jpg" class="slide-img" alt="13">
-            <img src="T7_14.jpg" class="slide-img" alt="14">
-            <img src="T7_15.jpg" class="slide-img" alt="15">
+            <img src="T7_1.jpg" class="slide-img"><img src="T7_2.jpg" class="slide-img"><img src="T7_3.jpg" class="slide-img">
+            <img src="T7_4.jpg" class="slide-img"><img src="T7_5.jpg" class="slide-img"><img src="T7_6.jpg" class="slide-img">
+            <img src="T7_7.jpg" class="slide-img"><img src="T7_8.jpg" class="slide-img"><img src="T7_9.jpg" class="slide-img">
+            <img src="T7_10.jpg" class="slide-img"><img src="T7_11.jpg" class="slide-img"><img src="T7_12.jpg" class="slide-img">
+            <img src="T7_13.jpg" class="slide-img"><img src="T7_14.jpg" class="slide-img"><img src="T7_15.jpg" class="slide-img">
 
-            <img src="T7_1.jpg" class="slide-img" alt="1">
-            <img src="T7_2.jpg" class="slide-img" alt="2">
-            <img src="T7_3.jpg" class="slide-img" alt="3">
-            <img src="T7_4.jpg" class="slide-img" alt="4">
-            <img src="T7_5.jpg" class="slide-img" alt="5">
-            <img src="T7_6.jpg" class="slide-img" alt="6">
-            <img src="T7_7.jpg" class="slide-img" alt="7">
-            <img src="T7_8.jpg" class="slide-img" alt="8">
-            <img src="T7_9.jpg" class="slide-img" alt="9">
-            <img src="T7_10.jpg" class="slide-img" alt="10">
-            <img src="T7_11.jpg" class="slide-img" alt="11">
-            <img src="T7_12.jpg" class="slide-img" alt="12">
-            <img src="T7_13.jpg" class="slide-img" alt="13">
-            <img src="T7_14.jpg" class="slide-img" alt="14">
-            <img src="T7_15.jpg" class="slide-img" alt="15">
+            <img src="T7_1.jpg" class="slide-img"><img src="T7_2.jpg" class="slide-img"><img src="T7_3.jpg" class="slide-img">
+            <img src="T7_4.jpg" class="slide-img"><img src="T7_5.jpg" class="slide-img"><img src="T7_6.jpg" class="slide-img">
+            <img src="T7_7.jpg" class="slide-img"><img src="T7_8.jpg" class="slide-img"><img src="T7_9.jpg" class="slide-img">
+            <img src="T7_10.jpg" class="slide-img"><img src="T7_11.jpg" class="slide-img"><img src="T7_12.jpg" class="slide-img">
+            <img src="T7_13.jpg" class="slide-img"><img src="T7_14.jpg" class="slide-img"><img src="T7_15.jpg" class="slide-img">
         </div>
     </div>
 
-    <a href="page8.html" class="next-btn">Next Page →</a>
+    <a href="page8.html" class="next-btn" id="nextBtn">Next Page →</a>
 
     <audio id="bg-music" loop>
         <source src="T7.mp3" type="audio/mpeg">
@@ -197,29 +175,32 @@
     <script>
         function startPage() {
             document.getElementById('start-screen').style.display = 'none';
-            
-            // Play Background Music
             document.getElementById('bg-music').play();
             
-            // Play Video (Unmuted if desired, but browsers usually block unmuted autoplay)
+            // Play Video
             var vid = document.getElementById('memory-video');
             vid.muted = false; // Try to unmute
-            vid.play().catch(error => {
-                // If autoplay fails due to sound, play muted
-                vid.muted = true;
-                vid.play();
-            });
+            vid.play().catch(() => { vid.muted = true; vid.play(); });
 
             // Start Confetti
             initConfetti();
         }
 
+        // --- DETECT VIDEO END ---
+        var video = document.getElementById('memory-video');
+        var nextBtn = document.getElementById('nextBtn');
+
+        video.onended = function() {
+            // When video finishes, show button
+            nextBtn.style.display = "inline-block";
+            // Scroll to button slightly
+            nextBtn.scrollIntoView({behavior: "smooth"});
+        };
+
         // --- CONFETTI LOGIC ---
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let confetti = [];
         const colors = ['#ffd700', '#ff00cc', '#00ffff', '#ffffff', '#ff4d4d'];
 
@@ -233,40 +214,20 @@
                 angle: Math.random() * 2 * Math.PI
             };
         }
-
         function initConfetti() {
-            for (let i = 0; i < 100; i++) {
-                confetti.push(createConfetti());
-            }
+            for (let i = 0; i < 100; i++) confetti.push(createConfetti());
             animateConfetti();
         }
-
         function animateConfetti() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             confetti.forEach((p, index) => {
-                p.y += p.speed;
-                p.x += Math.sin(p.angle) * 2;
-                
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Reset if falls off screen
-                if (p.y > canvas.height) {
-                    confetti[index] = createConfetti();
-                }
+                p.y += p.speed; p.x += Math.sin(p.angle) * 2;
+                ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                if (p.y > canvas.height) confetti[index] = createConfetti();
             });
-
             requestAnimationFrame(animateConfetti);
         }
-
-        // Handle Resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
     </script>
 </body>
 </html>
