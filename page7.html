@@ -3,252 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balloon Pop Party 🎈</title>
+    <title>Identity Check 🕵️‍♀️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Poppins:wght@600&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(180deg, #87CEFA 0%, #E0F7FA 100%);
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #050505;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
             min-height: 100vh;
-            overflow: hidden; /* Keep balloons inside */
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            color: #0f0;
+            overflow: hidden;
             user-select: none;
         }
-
-        /* --- SCORE BOARD --- */
-        .header {
-            z-index: 10;
-            margin-top: 20px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px 30px;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        h2 { color: #555; font-size: 1.2rem; margin-bottom: 10px; }
-
-        .password-display {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: #d6336c;
-            letter-spacing: 2px;
-            min-height: 60px;
-            font-weight: bold;
-            text-shadow: 2px 2px 0px white;
-        }
-
-        /* --- BALLOON STYLES --- */
-        .balloon {
-            position: absolute;
-            bottom: -150px;
-            width: 60px;
-            height: 80px;
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            cursor: crosshair;
-            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
-            animation: floatUp linear forwards;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: rgba(255,255,255,0.8);
-        }
-
-        /* Balloon String */
-        .balloon::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 15px;
-            background: rgba(0,0,0,0.3);
-        }
-
-        /* Balloon Colors */
-        .c1 { background: #ff758c; }
-        .c2 { background: #ffeb3b; }
-        .c3 { background: #4facfe; }
-        .c4 { background: #a18cd1; }
-        .c5 { background: #00f260; }
-        .c6 { background: #ff9a9e; }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-50vh) rotate(5deg); }
-            100% { transform: translateY(-120vh) rotate(-5deg); }
-        }
-
-        /* --- POP ANIMATION --- */
-        .pop-effect {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-            transform: scale(0);
-            animation: burst 0.3s ease-out;
-            pointer-events: none;
-            border-radius: 50%;
-        }
-        @keyframes burst { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
 
         /* --- START SCREEN --- */
         #start-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); color: white; z-index: 100;
+            background: rgba(0,0,0,0.95);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
+            z-index: 1000; cursor: pointer; color: white; font-family: 'Poppins', sans-serif;
         }
 
-        /* --- NEXT BUTTON --- */
-        #next-btn {
-            margin-top: 20px;
-            padding: 15px 40px;
-            background: linear-gradient(45deg, #ff00cc, #333399);
-            color: white;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            display: none; /* Hidden initially */
-            animation: bounceIn 1s;
+        /* --- SCANNER CONTAINER --- */
+        .scanner-container {
+            position: relative;
+            width: 250px;
+            height: 350px;
+            border: 2px solid #0f0;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 20, 0, 0.6);
+            transition: all 0.3s;
         }
-        @keyframes bounceIn { 0% { transform: scale(0); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        .scanner-container.success {
+            border-color: #00ffff;
+            box-shadow: 0 0 50px #00ffff;
+        }
+
+        /* --- FINGERPRINT ICON --- */
+        .fingerprint {
+            font-size: 8rem;
+            color: rgba(0, 255, 0, 0.3);
+            cursor: pointer;
+            transition: color 0.3s, transform 0.1s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .fingerprint:active { transform: scale(0.95); }
+        .scanning .fingerprint { color: rgba(0, 255, 0, 0.8); }
+
+        /* --- SCANNING BEAM --- */
+        .scan-line {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 5px;
+            background: #0f0;
+            box-shadow: 0 0 15px #0f0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .scanning .scan-line {
+            opacity: 1;
+            animation: scanAnim 1.5s linear infinite;
+        }
+
+        @keyframes scanAnim {
+            0% { top: 10%; }
+            50% { top: 90%; }
+            100% { top: 10%; }
+        }
+
+        /* --- TEXT STATUS --- */
+        .status-box {
+            margin-top: 30px;
+            text-align: center;
+            height: 60px;
+        }
+        
+        .status-text {
+            font-size: 1.2rem;
+            color: #0f0;
+            text-shadow: 0 0 5px #0f0;
+        }
+        
+        .sub-text {
+            font-size: 0.9rem;
+            color: rgba(0, 255, 0, 0.6);
+            margin-top: 5px;
+        }
+
+        /* --- RESULT SCREEN (Hidden initially) --- */
+        #result-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: fadeIn 0.5s;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 0 20px #00ffff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-pic {
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            border: 4px solid #00ffff;
+            box-shadow: 0 0 30px #00ffff;
+            margin-bottom: 20px;
+            object-fit: cover;
+            /* Placeholder background if no image */
+            background: #333; 
+        }
+
+        .next-btn {
+            padding: 15px 40px;
+            background: #00ffff;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 0 20px #00ffff;
+            animation: pulseBtn 1s infinite;
+        }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* --- CANVAS FOR CONFETTI --- */
+        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 200; }
 
     </style>
 </head>
 <body>
 
-    <div id="start-screen" onclick="startGame()">
-        <h1 style="font-family:'Dancing Script'; font-size: 3rem;">Pop the Balloons! 🎈</h1>
-        <p>Find the Secret Password...</p>
-        <p>(Tap to Start)</p>
+    <div id="start-screen" onclick="initPage()">
+        <h2>🔒 SECURITY CHECK</h2>
+        <p>Tap to Verify Identity</p>
     </div>
 
-    <div class="header">
-        <h2>Secret Password:</h2>
-        <div class="password-display" id="display-area">
-            </div>
-        <a href="page8.html" id="next-btn">Claim Your Reward →</a>
+    <div class="scanner-container" id="scanner">
+        <div class="scan-line"></div>
+        <div class="fingerprint" id="finger-btn">👆</div>
     </div>
 
-    <div id="balloon-container"></div>
+    <div class="status-box">
+        <div class="status-text" id="main-status">SYSTEM LOCKED</div>
+        <div class="sub-text" id="sub-status">Press & Hold Fingerprint to Scan</div>
+    </div>
 
-    <audio id="bg-music" loop>
+    <div id="result-overlay">
+        <h1>ACCESS GRANTED</h1>
+        <h2 style="color:#00ffff; font-family:'Poppins'; margin-bottom:30px;">Identity: The Talkative Don 😎</h2>
+        
+        <a href="page8.html" class="next-btn">Enter VIP Zone →</a>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <audio id="scan-sound" loop>
         <source src="T7.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="pop-sound">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2579/2579.wav" type="audio/wav">
     </audio>
 
     <script>
-        // --- CONFIGURATION ---
-        const secretText = "Talkative Tangii 💖♾️";
-        let currentIndex = 0;
-        let gameActive = false;
-        
-        const displayArea = document.getElementById('display-area');
-        const balloonContainer = document.getElementById('balloon-container');
-        const popSound = document.getElementById('pop-sound');
-        const bgMusic = document.getElementById('bg-music');
+        // --- LOGIC ---
+        let holdTimer = null;
+        let progress = 0;
+        const fingerBtn = document.getElementById('finger-btn');
+        const scanner = document.getElementById('scanner');
+        const mainStatus = document.getElementById('main-status');
+        const subStatus = document.getElementById('sub-status');
+        const scanSound = document.getElementById('scan-sound');
+        const resultOverlay = document.getElementById('result-overlay');
 
-        // Initialize Display with Underscores
-        let currentDisplay = Array(secretText.length).fill("_");
-        
-        function updateDisplay() {
-            // Join array with spaces for better readability
-            displayArea.innerText = currentDisplay.join(" ");
-        }
-        updateDisplay();
-
-        // --- START GAME ---
-        function startGame() {
+        function initPage() {
             document.getElementById('start-screen').style.display = 'none';
-            gameActive = true;
-            bgMusic.play();
-            // Spawn balloons continuously
-            setInterval(createBalloon, 400); // New balloon every 0.4s
         }
 
-        // --- CREATE BALLOON ---
-        function createBalloon() {
-            if (!gameActive && currentIndex >= secretText.length) return;
+        // --- MOUSE / TOUCH EVENTS ---
+        fingerBtn.addEventListener('mousedown', startScan);
+        fingerBtn.addEventListener('touchstart', startScan); // For mobile
 
-            const b = document.createElement('div');
-            b.classList.add('balloon');
+        fingerBtn.addEventListener('mouseup', stopScan);
+        fingerBtn.addEventListener('mouseleave', stopScan);
+        fingerBtn.addEventListener('touchend', stopScan); // For mobile
+
+        function startScan(e) {
+            e.preventDefault(); // Prevent text selection
+            scanner.classList.add('scanning');
+            scanSound.currentTime = 0;
+            scanSound.play();
             
-            // Random Color Class
-            const colors = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
-            b.classList.add(colors[Math.floor(Math.random() * colors.length)]);
-
-            // Random Position
-            b.style.left = Math.random() * 90 + 'vw';
+            mainStatus.innerText = "SCANNING BIOMETRICS...";
+            mainStatus.style.color = "#0f0";
             
-            // Random Speed
-            b.style.animationDuration = (Math.random() * 3 + 4) + 's'; // 4-7 seconds
-
-            // Interaction
-            b.onclick = function() { popBalloon(b); };
-            
-            balloonContainer.appendChild(b);
-
-            // Cleanup balloon after animation ends to save memory
-            setTimeout(() => { b.remove(); }, 7000);
+            // Reset Progress logic
+            progress = 0;
+            holdTimer = setInterval(scanProgress, 100); // Check every 100ms
         }
 
-        // --- POP LOGIC ---
-        function popBalloon(element) {
-            // 1. Play Sound
-            popSound.currentTime = 0;
-            popSound.play();
-
-            // 2. Create Visual Burst
-            const burst = document.createElement('div');
-            burst.classList.add('pop-effect');
-            burst.style.left = element.offsetLeft + 'px';
-            burst.style.top = element.offsetTop + 'px';
-            document.body.appendChild(burst);
-            setTimeout(() => burst.remove(), 300);
-
-            // 3. Remove Balloon
-            element.remove();
-
-            // 4. Reveal Next Letter
-            if (currentIndex < secretText.length) {
-                // Get the correct character
-                let char = secretText[currentIndex];
-                
-                // Update the display array
-                currentDisplay[currentIndex] = char;
-                updateDisplay();
-                
-                currentIndex++;
-
-                // CHECK FOR WIN
-                if (currentIndex === secretText.length) {
-                    gameWin();
-                }
+        function stopScan() {
+            clearInterval(holdTimer);
+            scanner.classList.remove('scanning');
+            scanSound.pause();
+            
+            if (progress < 100) {
+                mainStatus.innerText = "SCAN FAILED ❌";
+                mainStatus.style.color = "red";
+                subStatus.innerText = "Please hold until completion";
+                setTimeout(() => {
+                    mainStatus.innerText = "SYSTEM LOCKED";
+                    mainStatus.style.color = "#0f0";
+                    subStatus.innerText = "Press & Hold Fingerprint to Scan";
+                }, 1500);
             }
         }
 
-        // --- WIN FUNCTION ---
-        function gameWin() {
-            // Launch confetti or celebrate
-            document.getElementById('next-btn').style.display = 'inline-block';
+        function scanProgress() {
+            progress += 2.5; // Increases progress (takes about 4 seconds)
+
+            // Dynamic Text Updates
+            if (progress > 20 && progress < 50) {
+                mainStatus.innerText = "ANALYZING CUTENESS...";
+                subStatus.innerText = "Levels: 100%";
+            } else if (progress > 50 && progress < 80) {
+                mainStatus.innerText = "DETECTING MADNESS...";
+                subStatus.innerText = "Warning: High Voltage!";
+            } else if (progress > 80 && progress < 99) {
+                mainStatus.innerText = "VERIFYING TALKATIVE DON...";
+                subStatus.innerText = "Match found!";
+            }
+
+            if (progress >= 100) {
+                clearInterval(holdTimer);
+                scanSuccess();
+            }
+        }
+
+        function scanSuccess() {
+            scanner.classList.remove('scanning');
+            scanner.classList.add('success');
+            scanSound.pause();
             
-            // Speed up balloons for celebration effect
-            setInterval(createBalloon, 100);
+            mainStatus.innerText = "VERIFIED ✔";
+            subStatus.innerText = "Welcome, Queen.";
+            
+            // Grand Blast & Overlay
+            launchConfetti();
+            setTimeout(() => {
+                resultOverlay.style.display = 'flex';
+            }, 800);
+        }
+
+        // --- CONFETTI LOGIC ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let confetti = [];
+
+        function launchConfetti() {
+            for(let i=0; i<150; i++) {
+                confetti.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: Math.random() > 0.5 ? '#00ffff' : '#0f0',
+                    size: Math.random() * 5 + 2,
+                    speed: Math.random() * 5 + 5
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confetti.forEach((p, i) => {
+                p.y += p.speed;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateConfetti);
         }
 
     </script>
-
 </body>
 </html>
