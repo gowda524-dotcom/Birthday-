@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You 2025 ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Grand Year-End Background */
+            background: radial-gradient(circle at center, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- GOLDEN DUST/CONFETTI --- */
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+
+        /* --- HEADINGS --- */
+        .header-container {
+            z-index: 10;
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            margin-bottom: 10px;
+        }
+
+        .sub-title {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- THE DIARY FORM --- */
+        .form-card {
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 500px;
+            animation: zoomIn 1s ease-out;
+            position: relative;
+        }
+        
+        .form-card::before {
+            content: '✨'; font-size: 2rem;
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+        }
+
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .label-text {
+            color: #ffd700;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            text-align: left;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        input::placeholder, textarea::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        textarea { height: 120px; resize: none; }
+
+        /* --- SEND BUTTON --- */
+        .send-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd700, #fdbb2d);
+            border: none;
+            border-radius: 50px;
+            color: #2c3e50;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.6);
+        }
+        .send-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 30px;
+            font-family: 'Dancing Script', cursive;
+            color: rgba(255,255,255,0.6);
+            z-index: 10;
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="header-container">
+        <h1 class="main-title">Thank You for 2025 🥂</h1>
+        <p class="sub-title">A year of fights, love, and memories...</p>
+    </div>
+
+    <div class="form-card">
+        <form id="memoryForm" action="https://formspree.io/f/mqayyvvv" method="POST">
+            
+            <label class="label-text">From:</label>
+            <input type="text" name="name" placeholder="Your Name (Tangii)" required>
+            
+            <label class="label-text">A Note for Brother:</label>
+            <textarea name="message" placeholder="Describe our bond in 2025... What was your favorite memory? 💖" required></textarea>
+            
+            <button type="submit" id="submitBtn" class="send-btn">Send Memory 💌</button>
+            <p id="status-msg" style="margin-top:10px; font-size:0.9rem; display:none;">Sending...</p>
+        </form>
+    </div>
+
+    <div class="footer">
+        Wait for the magic after sending...
+    </div>
+
+    <script>
+        // --- FORM SUBMISSION & REDIRECT LOGIC ---
+        const form = document.getElementById("memoryForm");
+        const btn = document.getElementById("submitBtn");
+        const statusMsg = document.getElementById("status-msg");
+
+        async function handleSubmit(event) {
+            event.preventDefault(); // Stop default reload
+
+            // Show loading state
+            btn.disabled = true;
+            btn.innerText = "Sending...";
+            statusMsg.style.display = "block";
+            
+            const data = new FormData(event.target);
+
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // SUCCESS! Redirect to Birthday Page
+                    btn.innerText = "Sent! Redirecting... 🚀";
+                    setTimeout(() => {
+                        window.location.href = "birthday2025.html"; 
+                    }, 1000); // Short delay to see the "Sent" message
+                } else {
+                    // Error handling
+                    btn.disabled = false;
+                    btn.innerText = "Try Again ❌";
+                    alert("Oops! There was a problem sending your form.");
+                }
+            }).catch(error => {
+                btn.disabled = false;
+                btn.innerText = "Try Again ❌";
+                alert("Oops! There was a problem sending your form.");
+            });
+        }
+
+        form.addEventListener("submit", handleSubmit);
+
+
+        // --- BACKGROUND ANIMATION ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 3 + 1,
+                speedY: Math.random() * 1 + 0.5,
+                speedX: Math.random() * 0.5 - 0.25,
+                color: `rgba(255, 215, 0, ${Math.random() * 0.5 + 0.3})`
+            };
+        }
+
+        for (let i = 0; i < 150; i++) particles.push(createParticle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.y += p.speedY; p.x += p.speedX;
+                ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                if (p.y > canvas.height) particles[index] = createParticle();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    </script>
+</body>
+</html>
