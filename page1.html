@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Who is She? 💖</title>
+    <title>Who is She? 🎁</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
 
@@ -20,7 +20,18 @@
             padding: 20px;
         }
 
-        /* Start Screen Overlay (To allow audio autoplay) */
+        /* Grand Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Start Screen Overlay */
         #start-screen {
             position: fixed;
             top: 0;
@@ -36,103 +47,139 @@
             color: white;
             cursor: pointer;
         }
-        
         #start-screen h1 { font-size: 2rem; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
         /* Main Content Container */
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
             padding: 30px 20px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: none; /* Hidden until clicked */
+            display: none;
+            z-index: 10;
+            position: relative;
         }
 
-        /* Photo Style */
         .photo-frame {
-            width: 180px;
-            height: 180px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            border: 5px solid #ff758c;
+            border: 4px solid #ff758c;
             overflow: hidden;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Header Style */
         h2 {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: #d6336c;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* The List of Answers */
-        .answer-list {
-            list-style: none;
+        /* GRID FOR GIFT BOXES */
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* GIFT BOX STYLE */
+        .gift-box {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            height: 100px;
+            border-radius: 12px;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
         }
+        .gift-box:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(255, 117, 140, 0.3); }
 
-        .answer-item {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #444;
-            opacity: 0; /* Hidden initially */
-            transform: translateY(20px);
+        /* Closed State - Shows Gift Icon */
+        .gift-box.closed::after {
+            content: '🎁';
+            font-size: 3rem;
+            transition: transform 0.3s;
+        }
+        .gift-box.closed:hover::after { transform: scale(1.1) rotate(5deg); }
+
+        /* Opened State - Shows Text */
+        .gift-box.opened {
             background: #fff0f5;
+            border: 2px solid #ff9a9e;
+            cursor: default;
+            height: auto;
+            min-height: 80px;
             padding: 10px;
-            border-radius: 10px;
-            border-left: 5px solid #ff758c;
+            transform: none;
+            box-shadow: none;
+        }
+        .gift-box.opened::after { display: none; }
+        .gift-box.opened:hover { transform: none; }
+
+        /* Text inside the box */
+        .answer-text {
+            display: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #d6336c;
+            animation: fadeIn 0.5s ease;
+        }
+        .gift-box.opened .answer-text { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Click Sparkle Effect */
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #fff, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleAnim 0.6s linear forwards;
+        }
+        @keyframes sparkleAnim {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
         }
 
-        /* Animation Class */
-        .pop-up {
-            animation: popIn 0.8s forwards;
-        }
-
-        @keyframes popIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Next Button (Hidden initially) */
+        /* Next Button */
         .next-btn {
             display: inline-block;
-            margin-top: 30px;
-            padding: 12px 30px;
+            padding: 12px 35px;
             background: linear-gradient(to right, #ff758c, #ff7eb3);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
-            opacity: 0; 
+            font-size: 1.1rem;
+            opacity: 0;
             pointer-events: none;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
         }
-
-        .show-btn {
-            opacity: 1;
-            pointer-events: auto;
-            animation: bounceIn 1s;
-        }
-        @keyframes bounceIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            80% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
+        .show-btn { opacity: 1; pointer-events: auto; animation: bounceIn 0.8s; }
+        @keyframes bounceIn { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <canvas id="confetti-canvas"></canvas>
+
     <div id="start-screen" onclick="startSurprise()">
-        <h1>Tap to Reveal 💖</h1>
+        <h1>Tap to Unwrap 🎁</h1>
         <p>(Turn up your volume! 🔊)</p>
     </div>
 
@@ -141,54 +188,125 @@
             <img src="T1.jpg" alt="Tangii">
         </div>
 
-        <h2>Who is She? 🤔</h2>
+        <h2>Who is She? 🤔<br><span style="font-size: 1rem; color: #777;">(Click the gifts to find out!)</span></h2>
 
-        <ul class="answer-list">
-            <li class="answer-item">1. She is My Blood 🩸</li>
-            <li class="answer-item">2. Nan Tangiiiiiiiiiiii 💖 ♾️</li>
-            <li class="answer-item">3. My Diamond 💎</li>
-            <li class="answer-item">4. My World 🌎</li>
-            <li class="answer-item">5. My Comfort zone 🤗</li>
-            <li class="answer-item">6. My Bestfriend ❤️‍🩹</li>
-            <li class="answer-item">7. My Infinity ♾️</li>
-            <li class="answer-item">8. Nan Akka 🌍</li>
-            <li class="answer-item">9. Irreplaceble Person 🤗</li>
-            <li class="answer-item">10. Nan Best Tangiiii 💖 Forever ♾️...</li>
-        </ul>
+        <div class="gift-grid">
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">1. She is My Blood 🩸</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">2. Nan Tangiiiiiiiiiiii 💖 ♾️</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">3. My Diamond 💎</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">4. My World 🌎</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">5. My Comfort zone 🤗</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">6. My Bestfriend ❤️‍🩹</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">7. My Infinity ♾️</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">8. Nan Akka 🌍</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">9. Irreplaceble Person 🤗</p>
+            </div>
+            <div class="gift-box closed" onclick="openGift(this, event)">
+                <p class="answer-text">10. Nan Best Tangiiii 💖 Forever ♾️...</p>
+            </div>
+        </div>
 
         <a href="page2.html" class="next-btn" id="nextButton">Next Page →</a>
     </div>
 
-    <audio id="bg-music">
+    <audio id="bg-music" loop>
         <source src="T1.mp3" type="audio/mpeg">
     </audio>
 
     <script>
+        // --- GRAND CONFETTI SETUP ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let confetti = [];
+        const colors = ['#ff9a9e', '#fecfef', '#a18cd1', '#fbc2eb', '#fdcbf1', '#ffffff', '#ffd700'];
+
+        function createConfettiPiece() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 12 + 6,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: Math.random() * 3 + 2,
+                speedX: Math.random() * 2 - 1,
+                rotation: Math.random() * 360,
+                rotationSpeed: Math.random() * 2 - 1
+            };
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confetti.forEach((p, i) => {
+                p.y += p.speedY; p.x += p.speedX; p.rotation += p.rotationSpeed;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+                if (p.y > canvas.height) confetti[i] = createConfettiPiece();
+            });
+            if (confetti.length > 0) requestAnimationFrame(animateConfetti);
+        }
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // --- GAME LOGIC ---
+        let openedCount = 0;
+        const totalGifts = 10;
+
         function startSurprise() {
-            // 1. Hide Start Screen & Show Content
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
-
-            // 2. Play Music
-            var audio = document.getElementById('bg-music');
-            audio.play();
-
-            // 3. Trigger List Animation (One by one)
-            const items = document.querySelectorAll('.answer-item');
+            document.getElementById('bg-music').play();
             
-            items.forEach((item, index) => {
-                setTimeout(() => {
-                    item.classList.add('pop-up');
-                }, index * 1200); // 1.2 seconds delay between each line
-            });
+            // Launch Grand Confetti
+            for (let i = 0; i < 150; i++) confetti.push(createConfettiPiece());
+            animateConfetti();
+        }
 
-            // 4. Show Next Button after all items are done
-            // 10 items * 1200ms = 12000ms (12 seconds)
-            setTimeout(() => {
-                document.getElementById('nextButton').classList.add('show-btn');
-            }, 12500);
+        function openGift(box, event) {
+            if (box.classList.contains('opened')) return;
+
+            // 1. Visual & Logic Changes
+            box.classList.remove('closed');
+            box.classList.add('opened');
+            openedCount++;
+
+            // 2. Add Sparkle Effect at click position
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            const rect = box.getBoundingClientRect();
+            sparkle.style.left = `${event.clientX - rect.left - 10}px`;
+            sparkle.style.top = `${event.clientY - rect.top - 10}px`;
+            box.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 600);
+
+            // 3. Check if all are opened
+            if (openedCount === totalGifts) {
+                setTimeout(() => {
+                    document.getElementById('nextButton').classList.add('show-btn');
+                    // Add more confetti for celebration
+                    for (let i = 0; i < 50; i++) confetti.push(createConfettiPiece());
+                }, 500);
+            }
         }
     </script>
-
 </body>
 </html>
