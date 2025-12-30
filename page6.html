@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Match 🧩</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Playful Pastel Background */
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Floating Bubbles Background */
+        .bubbles {
+            position: absolute; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none;
+        }
+        .bubble {
+            position: absolute; bottom: -50px; background: rgba(255,255,255,0.3); border-radius: 50%;
+            animation: rise 10s infinite ease-in;
+        }
+        .b1 { width: 40px; height: 40px; left: 10%; animation-duration: 8s; }
+        .b2 { width: 60px; height: 60px; left: 30%; animation-duration: 12s; animation-delay: 1s; }
+        .b3 { width: 30px; height: 30px; left: 50%; animation-duration: 10s; animation-delay: 3s; }
+        .b4 { width: 50px; height: 50px; left: 70%; animation-duration: 14s; animation-delay: 2s; }
+        .b5 { width: 40px; height: 40px; left: 90%; animation-duration: 9s; animation-delay: 4s; }
+        @keyframes rise { 0% { bottom: -50px; transform: translateX(0); } 100% { bottom: 110%; transform: translateX(50px); } }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem; color: #4a4a4a; margin-bottom: 20px; z-index: 10;
+            text-shadow: 2px 2px white;
+        }
+
+        /* --- THE MEMORY GRID --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 80px); /* 4 columns */
+            grid-template-rows: repeat(3, 80px);    /* 3 rows */
+            gap: 15px;
+            z-index: 10;
+            perspective: 1000px;
+        }
+
+        /* MEDIA QUERY FOR BIGGER SCREENS */
+        @media (min-width: 500px) {
+            .grid-container {
+                grid-template-columns: repeat(4, 110px);
+                grid-template-rows: repeat(3, 110px);
+                gap: 20px;
+            }
+        }
+
+        /* --- CARD STYLING --- */
+        .card {
+            width: 100%; height: 100%;
+            position: relative; cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .card.flipped { transform: rotateY(180deg); }
+        .card.matched { pointer-events: none; }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* The back of the card (hidden side) */
+        .card-back {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            font-size: 2rem; color: white;
+            border: 3px solid white;
+        }
+
+        /* The front of the card (photo side) */
+        .card-front {
+            transform: rotateY(180deg);
+            background: white;
+            padding: 5px;
+        }
+        .card-front img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 8px;
+        }
+
+        /* --- START SCREEN --- */
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); color: white; z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
+        }
+
+        /* --- WIN SCREEN & BUTTON --- */
+        #win-message {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95); padding: 30px; border-radius: 20px;
+            text-align: center; z-index: 100; display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: popIn 0.5s ease;
+        }
+        @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.5); } to { transform: translate(-50%, -50%) scale(1); } }
+
+        .next-btn {
+            display: inline-block; margin-top: 20px; padding: 12px 30px;
+            background: #ff758c; color: white; text-decoration: none;
+            border-radius: 50px; font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bubbles">
+        <div class="bubble b1"></div><div class="bubble b2"></div><div class="bubble b3"></div><div class="bubble b4"></div><div class="bubble b5"></div>
+    </div>
+
+    <div id="start-screen" onclick="startGame()">
+        <h1 style="color:white;">Photo Match Challenge 🧩</h1>
+        <p>Find all the matching pairs!</p>
+        <p>(Tap to Start)</p>
+    </div>
+
+    <h1>Match the Memories!</h1>
+
+    <div class="grid-container" id="grid"></div>
+
+    <div id="win-message">
+        <h2 style="font-family:'Dancing Script'; color:#d6336c; font-size:2.5rem;">Yay! You Did It! 🎉</h2>
+        <p>Smart Tangii 😉</p>
+        <a href="page7.html" class="next-btn">Next Level →</a>
+    </div>
+
+    <audio id="bg-music" loop><source src="T6.mp3" type="audio/mpeg"></audio>
+    <audio id="match-sound"><source src="https://assets.mixkit.co/active_storage/sfx/270/270.wav" type="audio/wav"></audio>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const winMessage = document.getElementById('win-message');
+        const bgMusic = document.getElementById('bg-music');
+        const matchSound = document.getElementById('match-sound');
+
+        // --- IMAGES SETUP ---
+        // Must have T6_1.jpg to T6_6.jpg
+        const photos = ['T6_1.jpg', 'T6_2.jpg', 'T6_3.jpg', 'T6_4.jpg', 'T6_5.jpg', 'T6_6.jpg'];
+        // Create pairs (duplicate array)
+        let cardsArray = [...photos, ...photos];
+        
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let lockBoard = false; // Prevents clicking more than 2 cards
+
+        // --- SHUFFLE FUNCTION (Fisher-Yates) ---
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // --- START GAME ---
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            bgMusic.play();
+            cardsArray = shuffle(cardsArray);
+            createBoard();
+        }
+
+        // --- CREATE THE GRID ---
+        function createBoard() {
+            cardsArray.forEach(photoSrc => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.image = photoSrc; // Store image name in data attribute
+
+                const back = document.createElement('div');
+                back.classList.add('card-face', 'card-back');
+                back.innerHTML = '❓';
+
+                const front = document.createElement('div');
+                front.classList.add('card-face', 'card-front');
+                const img = document.createElement('img');
+                img.src = photoSrc;
+                front.appendChild(img);
+
+                card.appendChild(back);
+                card.appendChild(front);
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+        }
+
+        // --- FLIP CARD LOGIC ---
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === flippedCards[0]) return; // Prevent double clicking same card
+
+            this.classList.add('flipped');
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                checkForMatch();
+            }
+        }
+
+        // --- CHECK MATCH ---
+        function checkForMatch() {
+            lockBoard = true; // Lock board during check
+            const card1 = flippedCards[0];
+            const card2 = flippedCards[1];
+
+            if (card1.dataset.image === card2.dataset.image) {
+                // IT'S A MATCH!
+                matchSound.play();
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                flippedCards = [];
+                lockBoard = false;
+
+                if (matchedPairs === photos.length) {
+                    setTimeout(() => {
+                        winMessage.style.display = 'block';
+                    }, 800);
+                }
+            } else {
+                // NOT A MATCH
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                    lockBoard = false;
+                }, 1000); // Wait 1 second before flipping back
+            }
+        }
+    </script>
+</body>
+</html>
