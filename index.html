@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Talkative Tangii 💖♾️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -20,71 +20,112 @@
             position: relative;
         }
 
+        /* Animated Background Shapes */
         .shape { position: absolute; filter: blur(50px); z-index: 0; animation: float 6s infinite ease-in-out; }
         .shape-1 { top: -10%; left: -10%; width: 300px; height: 300px; background: #ff758c; border-radius: 50%; }
         .shape-2 { bottom: -10%; right: -10%; width: 350px; height: 350px; background: #a18cd1; border-radius: 50%; animation-delay: 1s; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(20px); } }
 
+        /* Glass Container */
         .container {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 20px;
             padding: 3rem 2rem;
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             z-index: 10;
-            position: relative;
+            animation: popIn 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #d6336c; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
-        .subtitle { font-size: 1rem; color: #555; margin-bottom: 2rem; font-weight: 300; }
-        .heart-icon { color: #ff4757; animation: beat 1s infinite alternate; display: inline-block; }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Text Styling */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #d6336c;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .heart-icon {
+            color: #ff4757;
+            animation: beat 1s infinite alternate;
+            display: inline-block;
+        }
         @keyframes beat { to { transform: scale(1.2); } }
 
-        .index-list { list-style: none; display: flex; flex-direction: column; gap: 15px; }
-        
-        .btn {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 15px 25px; background: white; color: #333;
-            text-decoration: none; border-radius: 50px; font-weight: 600;
-            transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        /* The Main Button */
+        .start-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff9a9e, #ff758c);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(214, 51, 108, 0.2); color: #d6336c; }
 
-        .btn.primary { background: linear-gradient(135deg, #ff9a9e, #ff758c); color: white; }
-        
-        footer { margin-top: 2.5rem; font-size: 0.8rem; color: #666; }
+        .start-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.6);
+        }
+
+        .start-btn span {
+            position: relative;
+            z-index: 2;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #666;
+            opacity: 0.8;
+        }
+
+        /* Confetti Canvas */
         #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
+
     <div class="shape shape-1"></div>
     <div class="shape shape-2"></div>
     <canvas id="confetti-canvas"></canvas>
 
     <div class="container">
-        <h1>My Talkative Tangii <span class="heart-icon">💖</span></h1>
-        <p class="subtitle">Thank you for being the noise in my quiet world. <br>♾️ Always & Forever ♾️</p>
+        <h1>Talkative Tangii <br> <span class="heart-icon">💖</span>♾️</h1>
+        <p class="subtitle">Welcome to your special surprise journey.</p>
 
-        <ul class="index-list">
-            <li class="index-item">
-                <a href="page1.html" class="btn primary">
-                    <span>👑 Who is She?</span>
-                    <span>→</span>
-                </a>
-            </li>
-            <li class="index-item">
-                <a href="birthday2024.html" class="btn">
-                    <span>🎉 Special Surprise</span>
-                    <span>→</span>
-                </a>
-            </li>
-        </ul>
+        <a href="page1.html" class="start-btn">
+            <span>1. Who is She? &nbsp; →</span>
+        </a>
 
-        <footer>Made with lots of love & code <br> for my favorite sister.</footer>
+        <footer>
+            Created with love for my sister
+        </footer>
     </div>
 
     <script>
@@ -96,9 +137,9 @@
         const colors = ['#ff9a9e', '#fecfef', '#a18cd1', '#fbc2eb', '#ffffff'];
 
         function createConfetti() {
-            return { x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, size: Math.random() * 10 + 5, color: colors[Math.floor(Math.random() * colors.length)], speed: Math.random() * 3 + 1, swing: Math.random() * 2, swingStep: Math.random() * 0.1 };
+            return { x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)], speed: Math.random() * 2 + 1, swing: Math.random() * 2, swingStep: Math.random() * 0.05 };
         }
-        for (let i = 0; i < 100; i++) confetti.push(createConfetti());
+        for (let i = 0; i < 80; i++) confetti.push(createConfetti());
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -109,6 +150,7 @@
             });
             requestAnimationFrame(animate);
         }
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
         animate();
     </script>
 </body>
