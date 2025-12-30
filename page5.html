@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Infinity ♾️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Deep Starlight Background */
+            background: radial-gradient(circle at center, #1a2a6c, #b21f1f, #fdbb2d); 
+            background: linear-gradient(to bottom, #000428, #004e92);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: white;
+            position: relative;
+        }
+
+        /* --- TWINKLING STARS --- */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            animation: moveStars 100s linear infinite;
+            opacity: 0.6;
+        }
+        @keyframes moveStars { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+
+        /* --- START SCREEN --- */
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000; cursor: pointer;
+        }
+        #start-screen h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ffd700; animation: pulse 2s infinite; }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            text-align: center;
+            z-index: 10;
+            display: none;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        /* --- PHOTO FRAME --- */
+        .frame-container {
+            position: relative;
+            width: 280px;
+            height: 350px;
+            margin: 0 auto 40px;
+            padding: 10px;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #000;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- QUOTES SECTION --- */
+        .quote-box {
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .quote {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-in-out;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            right: 0;
+        }
+
+        .quote.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- NEXT BUTTON --- */
+        .next-btn {
+            margin-top: 30px;
+            padding: 12px 40px;
+            background: transparent;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.5s;
+            pointer-events: none;
+        }
+
+        .next-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .next-btn:hover {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 0 20px #ffd700;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <div id="start-screen" onclick="startPage()">
+        <h1>For You... 💖</h1>
+        <p>(Tap to Listen)</p>
+    </div>
+
+    <div class="container" id="main-content">
+        
+        <div class="frame-container">
+            <img src="T5.jpg" alt="My Tangii" class="photo">
+        </div>
+
+        <div class="quote-box">
+            <p class="quote">"Nanna prapanchave neenu... 🌍"</p>
+            <p class="quote">"Koti janma bandru, neene nanna Tangii aagirbeku... 🤗"</p>
+            
+            <p class="quote">"Jagath alle nanage thumba ishta aago jeeva neenu. 💖"</p>
+            
+            <p class="quote">"Yene aadhru, Naa yavaglu nin jothe irthini... 🤗"</p>
+            
+            <p class="quote">"My Forever Talkative Tangii 💖♾️"</p>
+        </div>
+
+        <a href="page6.html" class="next-btn" id="nextBtn">Continue Journey →</a>
+
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="T5.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // --- QUOTES LOGIC ---
+        const quotes = document.querySelectorAll('.quote');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentQuote = 0;
+
+        function startPage() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('bg-music').play();
+            
+            // Start the Quote Loop
+            showNextQuote();
+        }
+
+        function showNextQuote() {
+            // If we have shown all quotes
+            if (currentQuote >= quotes.length) {
+                // Show the last quote permanently or show button
+                quotes[quotes.length - 1].classList.add('active');
+                nextBtn.classList.add('show');
+                return;
+            }
+
+            // Hide previous quote (if any)
+            if (currentQuote > 0) {
+                quotes[currentQuote - 1].classList.remove('active');
+            }
+
+            // Show current quote
+            quotes[currentQuote].classList.add('active');
+
+            // Wait 4 seconds, then show next
+            setTimeout(() => {
+                currentQuote++;
+                showNextQuote();
+            }, 4000); // 4 seconds per quote
+        }
+    </script>
+</body>
+</html>
