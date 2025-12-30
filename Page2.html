@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Special? ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Magical Night Gradient */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+            color: white;
+        }
+
+        /* --- FIREFLIES ANIMATION --- */
+        .firefly {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #ffff00;
+            animation: fly 10s linear infinite;
+            z-index: 0;
+            opacity: 0;
+        }
+
+        @keyframes fly {
+            0% { transform: translate(0, 0); opacity: 0; }
+            10% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { transform: translate(100vw, -100vh); opacity: 0; }
+        }
+
+        /* Start Screen */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        #start-screen h1 { font-size: 2rem; animation: pulse 1.5s infinite; color: #fff; }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            z-index: 10;
+            padding-bottom: 50px;
+            display: none; /* Hidden until start */
+        }
+
+        /* --- POLAROID PHOTO STYLE --- */
+        .polaroid-wrapper {
+            background: white;
+            padding: 10px 10px 30px 10px;
+            width: 220px;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transform: rotate(-3deg);
+            transition: transform 0.3s;
+        }
+        .polaroid-wrapper:hover { transform: rotate(0deg) scale(1.05); }
+        
+        .photo-frame {
+            width: 100%;
+            height: 200px;
+            background: #eee;
+            overflow: hidden;
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* --- REASON CARDS --- */
+        .reasons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .reason-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.1rem;
+            display: none; /* Hidden initially */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Animations for sliding in */
+        .slide-left { animation: slideInLeft 0.8s ease forwards; display: block; }
+        .slide-right { animation: slideInRight 0.8s ease forwards; display: block; }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* --- CONTROLS --- */
+        .action-btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 80%;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .reveal-btn {
+            background: #ff9a9e;
+            color: white;
+            animation: pulseBtn 2s infinite;
+        }
+
+        .next-page-btn {
+            background: #4facfe;
+            color: white;
+            text-decoration: none;
+            display: none; /* Hidden initially */
+        }
+
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="fireflies-container"></div>
+
+    <div id="start-screen" onclick="startPage()">
+        <h1>Tap to see why... ✨</h1>
+        <p>(Music will start 🎵)</p>
+    </div>
+
+    <div class="container" id="main-content">
+        
+        <div class="polaroid-wrapper">
+            <div class="photo-frame">
+                <img src="T2.jpg" alt="Special Tangii">
+            </div>
+        </div>
+
+        <h2>Why are you Special? 💖</h2>
+
+        <div class="reasons-list" id="list-container">
+            </div>
+
+        <button class="action-btn reveal-btn" id="revealBtn" onclick="showNextReason()">
+            Tap for Reason #1 👇
+        </button>
+
+        <a href="page3.html" class="action-btn next-page-btn" id="nextBtn">
+            Next Page →
+        </a>
+
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="T2.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // --- DATA: The Answers ---
+        const reasons = [
+            "1. Yak Andre nin Nan Muddu Tangiiiiiiiiii💖",
+            "2. Tumba Mathadthiya🥰",
+            "3. Yavaglu Supportive agi eruthiya🤗.",
+            "4. Ultra Possessive 🤭",
+            "5. Jasthi care madthiya loosuuuu😊."
+        ];
+
+        let currentIndex = 0;
+        const listContainer = document.getElementById('list-container');
+        const revealBtn = document.getElementById('revealBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // --- 1. START FUNCTION ---
+        function startPage() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('bg-music').play();
+            createFireflies();
+        }
+
+        // --- 2. SHOW NEXT REASON ---
+        function showNextReason() {
+            if (currentIndex < reasons.length) {
+                // Create new card
+                const card = document.createElement('div');
+                card.classList.add('reason-card');
+                card.innerText = reasons[currentIndex];
+
+                // Alternate animation (Left then Right)
+                if (currentIndex % 2 === 0) {
+                    card.classList.add('slide-left');
+                } else {
+                    card.classList.add('slide-right');
+                }
+
+                listContainer.appendChild(card);
+                
+                // Update Button Text
+                currentIndex++;
+                if (currentIndex < reasons.length) {
+                    revealBtn.innerText = `Tap for Reason #${currentIndex + 1} 👇`;
+                } else {
+                    // All done
+                    revealBtn.style.display = 'none';
+                    nextBtn.style.display = 'block'; // Show Next Page Link
+                    nextBtn.classList.add('slide-left');
+                }
+            }
+        }
+
+        // --- 3. FIREFLIES EFFECT ---
+        function createFireflies() {
+            const container = document.getElementById('fireflies-container');
+            for(let i=0; i<30; i++) {
+                const firefly = document.createElement('div');
+                firefly.classList.add('firefly');
+                // Random position
+                firefly.style.left = Math.random() * 100 + 'vw';
+                firefly.style.top = Math.random() * 100 + 'vh';
+                // Random animation delay
+                firefly.style.animationDelay = Math.random() * 5 + 's';
+                // Random size
+                const size = Math.random() * 5 + 2 + 'px';
+                firefly.style.width = size;
+                firefly.style.height = size;
+                container.appendChild(firefly);
+            }
+        }
+    </script>
+</body>
+</html>
