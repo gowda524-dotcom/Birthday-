@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,6 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            /* Playful Pastel Background */
             background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
             min-height: 100vh;
             display: flex;
@@ -46,9 +46,9 @@
         /* --- THE MEMORY GRID --- */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(4, 80px); /* 4 columns */
-            grid-template-rows: repeat(3, 80px);    /* 3 rows */
-            gap: 15px;
+            grid-template-columns: repeat(4, 85px); /* Slightly wider for text */
+            grid-template-rows: repeat(3, 85px);
+            gap: 12px;
             z-index: 10;
             perspective: 1000px;
         }
@@ -81,11 +81,22 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* The back of the card (hidden side) */
+        /* --- UPDATED BACK DESIGN --- */
         .card-back {
             background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-            font-size: 2rem; color: white;
-            border: 3px solid white;
+            color: white;
+            border: 2px solid white;
+            text-align: center;
+            flex-direction: column;
+            padding: 5px;
+        }
+        
+        .back-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 0.9rem; /* Smaller size to fit */
+            line-height: 1.2;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
         /* The front of the card (photo side) */
@@ -155,16 +166,13 @@
         const matchSound = document.getElementById('match-sound');
 
         // --- IMAGES SETUP ---
-        // Must have T6_1.jpg to T6_6.jpg
         const photos = ['T6_1.jpg', 'T6_2.jpg', 'T6_3.jpg', 'T6_4.jpg', 'T6_5.jpg', 'T6_6.jpg'];
-        // Create pairs (duplicate array)
         let cardsArray = [...photos, ...photos];
         
         let flippedCards = [];
         let matchedPairs = 0;
-        let lockBoard = false; // Prevents clicking more than 2 cards
+        let lockBoard = false;
 
-        // --- SHUFFLE FUNCTION (Fisher-Yates) ---
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -173,7 +181,6 @@
             return array;
         }
 
-        // --- START GAME ---
         function startGame() {
             document.getElementById('start-screen').style.display = 'none';
             bgMusic.play();
@@ -181,16 +188,17 @@
             createBoard();
         }
 
-        // --- CREATE THE GRID ---
         function createBoard() {
             cardsArray.forEach(photoSrc => {
                 const card = document.createElement('div');
                 card.classList.add('card');
-                card.dataset.image = photoSrc; // Store image name in data attribute
+                card.dataset.image = photoSrc;
 
                 const back = document.createElement('div');
                 back.classList.add('card-face', 'card-back');
-                back.innerHTML = '❓';
+                
+                // --- NEW CONTENT HERE ---
+                back.innerHTML = '<span class="back-text">Talkative<br>Tangii<br>💖♾️</span>';
 
                 const front = document.createElement('div');
                 front.classList.add('card-face', 'card-front');
@@ -205,10 +213,9 @@
             });
         }
 
-        // --- FLIP CARD LOGIC ---
         function flipCard() {
             if (lockBoard) return;
-            if (this === flippedCards[0]) return; // Prevent double clicking same card
+            if (this === flippedCards[0]) return;
 
             this.classList.add('flipped');
             flippedCards.push(this);
@@ -218,14 +225,12 @@
             }
         }
 
-        // --- CHECK MATCH ---
         function checkForMatch() {
-            lockBoard = true; // Lock board during check
+            lockBoard = true;
             const card1 = flippedCards[0];
             const card2 = flippedCards[1];
 
             if (card1.dataset.image === card2.dataset.image) {
-                // IT'S A MATCH!
                 matchSound.play();
                 card1.classList.add('matched');
                 card2.classList.add('matched');
@@ -239,13 +244,12 @@
                     }, 800);
                 }
             } else {
-                // NOT A MATCH
                 setTimeout(() => {
                     card1.classList.remove('flipped');
                     card2.classList.remove('flipped');
                     flippedCards = [];
                     lockBoard = false;
-                }, 1000); // Wait 1 second before flipping back
+                }, 1000);
             }
         }
     </script>
