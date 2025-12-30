@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,12 +19,14 @@
             padding: 20px;
             color: #fff;
             text-align: center;
+            margin: 0;
         }
 
         /* Glass Card Effect */
         .card {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* For Safari/iPhone */
             border-radius: 20px;
             padding: 30px;
             max-width: 500px;
@@ -50,6 +53,7 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             position: relative;
+            background: #fff;
         }
 
         .photo-frame img {
@@ -78,19 +82,27 @@
         .stat-item {
             margin: 10px 0;
             font-size: 1.1rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         /* Music Player */
         .music-player {
-            margin: 20px 0;
+            margin: 20px auto;
             background: white;
             color: #333;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 50px;
             display: inline-flex;
             align-items: center;
             gap: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 90%;
+        }
+        
+        audio {
+            height: 30px;
+            max-width: 200px;
         }
 
         /* Navigation Buttons */
@@ -110,6 +122,7 @@
             font-weight: bold;
             flex: 1;
             transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .btn:hover {
@@ -148,15 +161,16 @@
         <p>She is the noise in the silence, the sparkle in the dark, and the best sister anyone could ask for!</p>
 
         <div class="music-player">
-            <span>🎵 Now Playing: Special Tune</span>
-            <audio id="audio" controls>
+            <span>🎵</span>
+            <audio controls>
                 <source src="song1.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
+                Your browser does not support audio.
             </audio>
         </div>
 
         <div class="nav-buttons">
             <a href="index.html" class="btn">← Back</a>
+            
             <a href="birthday2024.html" class="btn btn-next">Grand Finale →</a>
         </div>
     </div>
@@ -167,6 +181,8 @@
         const slides = document.querySelectorAll('.photo-frame img');
 
         function showSlides() {
+            if (slides.length === 0) return; // Safety check
+
             // Hide all images
             slides.forEach(img => img.classList.remove('active'));
             
