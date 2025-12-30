@@ -7,11 +7,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -20,45 +16,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden; /* Hide scrollbars for the background animation */
+            overflow: hidden;
             position: relative;
         }
 
-        /* Floating Background Shapes */
-        .shape {
-            position: absolute;
-            filter: blur(50px);
-            z-index: 0;
-            animation: float 6s infinite ease-in-out;
-        }
-        .shape-1 {
-            top: -10%;
-            left: -10%;
-            width: 300px;
-            height: 300px;
-            background: #ff758c;
-            border-radius: 50%;
-        }
-        .shape-2 {
-            bottom: -10%;
-            right: -10%;
-            width: 350px;
-            height: 350px;
-            background: #a18cd1;
-            border-radius: 50%;
-            animation-delay: 1s;
-        }
+        .shape { position: absolute; filter: blur(50px); z-index: 0; animation: float 6s infinite ease-in-out; }
+        .shape-1 { top: -10%; left: -10%; width: 300px; height: 300px; background: #ff758c; border-radius: 50%; }
+        .shape-2 { bottom: -10%; right: -10%; width: 350px; height: 350px; background: #a18cd1; border-radius: 50%; animation-delay: 1s; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(20px); } }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(20px); }
-        }
-
-        /* Main Glass Container */
         .container {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 20px;
             padding: 3rem 2rem;
@@ -68,111 +37,32 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             z-index: 10;
             position: relative;
-            animation: popIn 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #d6336c; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+        .subtitle { font-size: 1rem; color: #555; margin-bottom: 2rem; font-weight: 300; }
+        .heart-icon { color: #ff4757; animation: beat 1s infinite alternate; display: inline-block; }
+        @keyframes beat { to { transform: scale(1.2); } }
 
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            color: #d6336c;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: #555;
-            margin-bottom: 2rem;
-            font-weight: 300;
-        }
-
-        .heart-icon {
-            font-size: 1.5rem;
-            color: #ff4757;
-            animation: beat 1s infinite alternate;
-            display: inline-block;
-        }
-
-        @keyframes beat {
-            to { transform: scale(1.2); }
-        }
-
-        /* Index/Navigation Links */
-        .index-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .index-item {
-            width: 100%;
-        }
-
+        .index-list { list-style: none; display: flex; flex-direction: column; gap: 15px; }
+        
         .btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 25px;
-            background: white;
-            color: #333;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid transparent;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px 25px; background: white; color: #333;
+            text-decoration: none; border-radius: 50px; font-weight: 600;
+            transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(214, 51, 108, 0.2); color: #d6336c; }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(214, 51, 108, 0.2);
-            border-color: #ff9a9e;
-            color: #d6336c;
-        }
-
-        .btn span:first-child {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .emoji {
-            font-size: 1.2rem;
-        }
-
-        .arrow {
-            font-size: 1.2rem;
-        }
-
-        footer {
-            margin-top: 2.5rem;
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        /* Canvas for Confetti */
-        #confetti-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-        }
+        .btn.primary { background: linear-gradient(135deg, #ff9a9e, #ff758c); color: white; }
+        
+        footer { margin-top: 2.5rem; font-size: 0.8rem; color: #666; }
+        #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
-
     <div class="shape shape-1"></div>
     <div class="shape shape-2"></div>
-    
     <canvas id="confetti-canvas"></canvas>
 
     <div class="container">
@@ -181,35 +71,20 @@
 
         <ul class="index-list">
             <li class="index-item">
-                <a href="#about" class="btn" onclick="alert('Link to About Section!')">
-                    <span><span class="emoji">👑</span> Who is She?</span>
-                    <span class="arrow">→</span>
+                <a href="page1.html" class="btn primary">
+                    <span>👑 Who is She?</span>
+                    <span>→</span>
                 </a>
             </li>
             <li class="index-item">
-                <a href="#memories" class="btn" onclick="alert('Link to Memories Gallery!')">
-                    <span><span class="emoji">📸</span> Crazy Memories</span>
-                    <span class="arrow">→</span>
-                </a>
-            </li>
-            <li class="index-item">
-                <a href="#gratitude" class="btn" onclick="alert('Link to Gratitude Letter!')">
-                    <span><span class="emoji">💌</span> Why I'm Thankful</span>
-                    <span class="arrow">→</span>
-                </a>
-            </li>
-            <li class="index-item">
-                <a href="#wishes" class="btn" onclick="alert('Link to Surprise Wishes!')">
-                    <span><span class="emoji">🎉</span> Special Surprise</span>
-                    <span class="arrow">→</span>
+                <a href="birthday2024.html" class="btn">
+                    <span>🎉 Special Surprise</span>
+                    <span>→</span>
                 </a>
             </li>
         </ul>
 
-        <footer>
-            Made with lots of love & code <br>
-            for my favorite sister.
-        </footer>
+        <footer>Made with lots of love & code <br> for my favorite sister.</footer>
     </div>
 
     <script>
@@ -217,53 +92,23 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         const confetti = [];
         const colors = ['#ff9a9e', '#fecfef', '#a18cd1', '#fbc2eb', '#ffffff'];
 
         function createConfetti() {
-            return {
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 10 + 5,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                speed: Math.random() * 3 + 1,
-                swing: Math.random() * 2,
-                swingStep: Math.random() * 0.1
-            };
+            return { x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, size: Math.random() * 10 + 5, color: colors[Math.floor(Math.random() * colors.length)], speed: Math.random() * 3 + 1, swing: Math.random() * 2, swingStep: Math.random() * 0.1 };
         }
-
-        for (let i = 0; i < 100; i++) {
-            confetti.push(createConfetti());
-        }
+        for (let i = 0; i < 100; i++) confetti.push(createConfetti());
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            confetti.forEach((p, index) => {
-                p.y += p.speed;
-                p.x += Math.cos(p.swing) * 2;
-                p.swing += p.swingStep;
-
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-
-                if (p.y > canvas.height) {
-                    confetti[index] = createConfetti();
-                }
+            confetti.forEach((p, i) => {
+                p.y += p.speed; p.x += Math.cos(p.swing) * 2; p.swing += p.swingStep;
+                ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                if (p.y > canvas.height) confetti[i] = createConfetti();
             });
-
             requestAnimationFrame(animate);
         }
-
-        // Handle Resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
         animate();
     </script>
 </body>
