@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Bond 💖</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Elegant Rose Gold Gradient */
+            background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+            color: #444;
+            position: relative;
+        }
+
+        /* --- HEART RAIN BACKGROUND --- */
+        .heart-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .heart {
+            position: absolute;
+            color: #ff9a9e;
+            font-size: 1.5rem;
+            animation: fall linear infinite;
+            opacity: 0.6;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- START SCREEN --- */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        #start-screen h1 { 
+            font-family: 'Dancing Script', cursive; 
+            font-size: 2.5rem; 
+            color: #d6336c; 
+            animation: pulse 2s infinite; 
+        }
+
+        /* --- MAIN CARD --- */
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 40px 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            border: 2px solid #fff;
+            display: none; /* Hidden until start */
+            animation: fadeIn 1.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- PHOTO STYLE --- */
+        .photo-container {
+            width: 260px;
+            height: 260px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            padding: 8px;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            box-shadow: 0 10px 25px rgba(255, 154, 158, 0.4);
+            animation: floatPhoto 6s ease-in-out infinite;
+        }
+        .photo-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid white;
+            overflow: hidden;
+        }
+        .photo-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
+        @keyframes floatPhoto {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- TEXT CONTENT --- */
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #d6336c;
+            margin-bottom: 15px;
+        }
+        
+        .message-box {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .highlight { color: #d6336c; font-weight: 700; }
+
+        /* --- NEXT BUTTON --- */
+        .next-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ff9a9e, #ff758c);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+            transition: transform 0.2s;
+        }
+        .next-btn:hover { transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <div id="start-screen" onclick="startPage()">
+        <h1>Tap to Feel the Love 💖</h1>
+        <p>(Turn on volume 🔊)</p>
+    </div>
+
+    <div class="heart-rain" id="heart-rain"></div>
+
+    <div class="card" id="main-content">
+        
+        <div class="photo-container">
+            <div class="photo-wrapper">
+                <img src="T3.jpg" alt="Brother Sister Bond">
+            </div>
+        </div>
+
+        <h2>Infinite Bond ♾️</h2>
+
+        <div class="message-box">
+            <p>No matter how much we fight, <br>
+            No matter how much I tease you,<br>
+            You will always be my <span class="highlight">Little Princess</span>.</p>
+            <br>
+            <p>I promise to be your <br>
+            <span class="highlight">Support System</span> forever.</p>
+        </div>
+
+        <a href="page4.html" class="next-btn">Continue Journey →</a>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="T3.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function startPage() {
+            // Hide Start Screen
+            document.getElementById('start-screen').style.display = 'none';
+            // Show Content
+            document.getElementById('main-content').style.display = 'block';
+            // Play Music
+            document.getElementById('bg-music').play();
+            // Start Heart Rain
+            createRain();
+        }
+
+        function createRain() {
+            const container = document.getElementById('heart-rain');
+            const hearts = ['💖', '🌸', '✨', '🩷', '🌹'];
+
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4s to 7s
+                heart.style.fontSize = Math.random() * 1 + 1 + 'rem';
+                container.appendChild(heart);
+            }
+        }
+    </script>
+
+</body>
+</html>
