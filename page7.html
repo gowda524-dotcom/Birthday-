@@ -3,313 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Canvas 🎨</title>
+    <title>Memories with my Sister 💖♾️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: #080808;
-            color: white;
             font-family: 'Poppins', sans-serif;
+            /* Grand Royal Background */
+            background: radial-gradient(circle at center, #2b1055 0%, #000000 100%);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-            touch-action: none; /* Prevent scrolling while drawing */
+            overflow-x: hidden;
+            color: white;
+            padding-bottom: 20px;
+        }
+
+        /* --- CONFETTI CANVAS --- */
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
         }
 
         /* --- TITLE --- */
-        .header {
-            position: absolute;
-            top: 20px;
-            text-align: center;
-            z-index: 10;
-            pointer-events: none;
-        }
-        h2 {
+        h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
-            background: linear-gradient(to right, #ff00cc, #333399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2.8rem;
+            color: #ffd700; /* Gold */
+            margin-top: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px #ff00cc;
+            z-index: 10;
+            animation: glowText 2s infinite alternate;
         }
-        p { font-size: 0.9rem; color: #888; }
+        @keyframes glowText { from { text-shadow: 0 0 10px gold; } to { text-shadow: 0 0 25px gold, 0 0 5px white; } }
 
-        /* --- CANVAS --- */
-        #drawing-canvas {
-            background: #111;
-            border: 2px solid #333;
+        /* --- VIDEO SECTION --- */
+        .video-container {
+            width: 90%;
+            max-width: 600px;
+            height: 35vh; /* Takes up top portion */
+            margin: 20px auto;
+            position: relative;
+            z-index: 10;
             border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 0, 204, 0.2);
-            cursor: crosshair;
+            /* Grand Gold Frame */
+            padding: 5px;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
         }
 
-        /* --- CONTROLS --- */
-        .controls {
-            position: absolute;
-            bottom: 30px;
-            display: flex;
-            gap: 20px;
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video fills space */
+            border-radius: 10px;
+            border: 2px solid black;
+        }
+
+        /* --- SLIDESHOW SECTION --- */
+        .slideshow-wrapper {
+            width: 100%;
+            margin-top: 20px;
+            overflow: hidden; /* Hides scrollbar */
+            position: relative;
             z-index: 10;
+            background: rgba(255,255,255,0.05);
+            padding: 15px 0;
+            border-top: 2px solid rgba(255,255,255,0.2);
+            border-bottom: 2px solid rgba(255,255,255,0.2);
         }
 
-        button {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+        .marquee {
+            display: flex;
+            gap: 15px;
+            width: max-content; /* Allows content to stretch */
+            animation: scrollLeft 25s linear infinite;
         }
 
-        .clear-btn {
-            background: #333;
-            color: white;
-            border: 1px solid #555;
-        }
-        .done-btn {
-            background: linear-gradient(45deg, #ff00cc, #a18cd1);
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 0, 204, 0.4);
+        .marquee:hover {
+            animation-play-state: paused; /* Pauses on hover */
         }
 
-        button:active { transform: scale(0.95); }
-
-        /* --- RESULT OVERLAY --- */
-        #result-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-            animation: fadeIn 1s;
+        .slide-img {
+            height: 180px; /* Adjust height based on preference */
+            width: auto;
+            border-radius: 10px;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
         }
 
-        .analyzing-text {
-            font-family: 'Courier New', monospace;
-            color: #0f0;
-            margin-bottom: 20px;
+        .slide-img:hover { transform: scale(1.1); border-color: #ffd700; }
+
+        @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Move half way because we duplicated images */
         }
 
-        .final-message {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: #ff69b4;
-            text-align: center;
-            line-height: 1.5;
-            text-shadow: 0 0 20px #ff69b4;
-            transform: scale(0);
-            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .show-msg { transform: scale(1); }
-
+        /* --- NEXT BUTTON --- */
         .next-btn {
             margin-top: 30px;
-            padding: 15px 40px;
-            background: white;
-            color: black;
+            display: inline-block;
+            padding: 15px 50px;
+            background: linear-gradient(90deg, #ff00cc, #333399);
+            color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
-            opacity: 0;
-            transition: opacity 1s;
+            font-size: 1.1rem;
+            box-shadow: 0 0 20px rgba(255, 0, 204, 0.5);
+            z-index: 10;
+            animation: pulseBtn 2s infinite;
         }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         /* --- START SCREEN --- */
         #start-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 100;
+            background: rgba(0,0,0,0.95);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
+            z-index: 2000; cursor: pointer;
         }
-
-        /* --- CONFETTI CANVAS --- */
-        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; }
+        #start-screen h1 { color: #fff; font-size: 2rem; margin-bottom: 10px; }
+        #start-screen p { color: #ffd700; font-size: 1.2rem; }
 
     </style>
 </head>
 <body>
 
-    <div id="start-screen" onclick="startApp()">
-        <h1 style="color: #ff00cc; font-family: 'Dancing Script'; font-size: 3rem;">Magic Art 🎨</h1>
-        <p style="color:white; margin-top:10px;">Draw something for your brother...</p>
-        <p style="color:gray;">(Tap to Start)</p>
-    </div>
-
-    <div class="header">
-        <h2>Draw a Heart ❤️</h2>
-        <p>Use your finger/mouse to draw!</p>
-    </div>
-
-    <canvas id="drawing-canvas"></canvas>
-
-    <div class="controls">
-        <button class="clear-btn" onclick="clearCanvas()">Clear</button>
-        <button class="done-btn" onclick="finishDrawing()">I'm Done!</button>
-    </div>
-
-    <div id="result-overlay">
-        <h3 class="analyzing-text" id="status-text">ANALYZING ART...</h3>
-        
-        <div class="final-message" id="final-msg">
-            "I Love My Brother!"<br>
-            <span style="font-size: 1.5rem; color: white;">- Signed by Tangii ✍️</span>
-        </div>
-        
-        <a href="page9.html" class="next-btn" id="next-btn">Aww, I knew it! 😎 →</a>
-    </div>
-
     <canvas id="confetti-canvas"></canvas>
 
+    <div id="start-screen" onclick="startPage()">
+        <h1>Memories... 📸</h1>
+        <p>Tap to Play Video & Slideshow ✨</p>
+    </div>
+
+    <h1>Memories with my sister 💖</h1>
+
+    <div class="video-container">
+        <video id="memory-video" playsinline loop muted>
+            <source src="T7.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="slideshow-wrapper">
+        <div class="marquee">
+            <img src="T7_1.jpg" class="slide-img" alt="1">
+            <img src="T7_2.jpg" class="slide-img" alt="2">
+            <img src="T7_3.jpg" class="slide-img" alt="3">
+            <img src="T7_4.jpg" class="slide-img" alt="4">
+            <img src="T7_5.jpg" class="slide-img" alt="5">
+            <img src="T7_6.jpg" class="slide-img" alt="6">
+            <img src="T7_7.jpg" class="slide-img" alt="7">
+            <img src="T7_8.jpg" class="slide-img" alt="8">
+            <img src="T7_9.jpg" class="slide-img" alt="9">
+            <img src="T7_10.jpg" class="slide-img" alt="10">
+            <img src="T7_11.jpg" class="slide-img" alt="11">
+            <img src="T7_12.jpg" class="slide-img" alt="12">
+            <img src="T7_13.jpg" class="slide-img" alt="13">
+            <img src="T7_14.jpg" class="slide-img" alt="14">
+            <img src="T7_15.jpg" class="slide-img" alt="15">
+
+            <img src="T7_1.jpg" class="slide-img" alt="1">
+            <img src="T7_2.jpg" class="slide-img" alt="2">
+            <img src="T7_3.jpg" class="slide-img" alt="3">
+            <img src="T7_4.jpg" class="slide-img" alt="4">
+            <img src="T7_5.jpg" class="slide-img" alt="5">
+            <img src="T7_6.jpg" class="slide-img" alt="6">
+            <img src="T7_7.jpg" class="slide-img" alt="7">
+            <img src="T7_8.jpg" class="slide-img" alt="8">
+            <img src="T7_9.jpg" class="slide-img" alt="9">
+            <img src="T7_10.jpg" class="slide-img" alt="10">
+            <img src="T7_11.jpg" class="slide-img" alt="11">
+            <img src="T7_12.jpg" class="slide-img" alt="12">
+            <img src="T7_13.jpg" class="slide-img" alt="13">
+            <img src="T7_14.jpg" class="slide-img" alt="14">
+            <img src="T7_15.jpg" class="slide-img" alt="15">
+        </div>
+    </div>
+
+    <a href="page8.html" class="next-btn">Next Page →</a>
+
     <audio id="bg-music" loop>
-        <source src="T8.mp3" type="audio/mpeg">
+        <source src="T7.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // --- CANVAS SETUP ---
-        const canvas = document.getElementById('drawing-canvas');
-        const ctx = canvas.getContext('2d');
-        let painting = false;
-
-        // Set canvas size (Responsive)
-        function resizeCanvas() {
-            canvas.width = window.innerWidth * 0.9;
-            canvas.height = window.innerHeight * 0.7;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        // Brush Style
-        ctx.lineWidth = 4;
-        ctx.lineCap = 'round';
-        ctx.shadowBlur = 10;
-        let hue = 0;
-
-        function startPosition(e) {
-            painting = true;
-            draw(e);
-        }
-
-        function endPosition() {
-            painting = false;
-            ctx.beginPath();
-        }
-
-        function draw(e) {
-            if (!painting) return;
-
-            e.preventDefault(); // Prevent scrolling on touch
-
-            // Get mouse/touch position
-            let clientX, clientY;
-            if(e.type.includes('touch')) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-
-            // Adjust for canvas position
-            const rect = canvas.getBoundingClientRect();
-            const x = clientX - rect.left;
-            const y = clientY - rect.top;
-
-            // Rainbow Colors
-            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-            ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
-            
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-
-            hue++;
-            if (hue >= 360) hue = 0;
-        }
-
-        // Event Listeners
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mouseup', endPosition);
-        canvas.addEventListener('mousemove', draw);
-        
-        canvas.addEventListener('touchstart', startPosition);
-        canvas.addEventListener('touchend', endPosition);
-        canvas.addEventListener('touchmove', draw);
-
-        // --- APP LOGIC ---
-        function startApp() {
+        function startPage() {
             document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('bg-music').play();
-        }
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function finishDrawing() {
-            const overlay = document.getElementById('result-overlay');
-            const statusText = document.getElementById('status-text');
-            const finalMsg = document.getElementById('final-msg');
-            const nextBtn = document.getElementById('next-btn');
-
-            overlay.style.display = 'flex';
-
-            // Sequence
-            setTimeout(() => { statusText.innerText = "DETECTING HIDDEN MEANING..."; }, 1500);
-            setTimeout(() => { statusText.innerText = "TRANSLATING..."; }, 3000);
             
-            setTimeout(() => { 
-                statusText.style.display = 'none'; // Hide analyzing text
-                finalMsg.classList.add('show-msg'); // Show Message
-                launchConfetti(); // Celebration
-            }, 4500);
+            // Play Background Music
+            document.getElementById('bg-music').play();
+            
+            // Play Video (Unmuted if desired, but browsers usually block unmuted autoplay)
+            var vid = document.getElementById('memory-video');
+            vid.muted = false; // Try to unmute
+            vid.play().catch(error => {
+                // If autoplay fails due to sound, play muted
+                vid.muted = true;
+                vid.play();
+            });
 
-            setTimeout(() => {
-                nextBtn.style.opacity = '1';
-                nextBtn.style.pointerEvents = 'auto';
-            }, 6000);
+            // Start Confetti
+            initConfetti();
         }
 
-        // --- CONFETTI ---
-        const cCanvas = document.getElementById('confetti-canvas');
-        const cCtx = cCanvas.getContext('2d');
-        cCanvas.width = window.innerWidth; cCanvas.height = window.innerHeight;
-        let confetti = [];
+        // --- CONFETTI LOGIC ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        function launchConfetti() {
-            for(let i=0; i<100; i++) {
-                confetti.push({
-                    x: Math.random() * cCanvas.width,
-                    y: Math.random() * cCanvas.height - cCanvas.height,
-                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                    size: Math.random() * 5 + 3,
-                    speed: Math.random() * 5 + 2
-                });
+        let confetti = [];
+        const colors = ['#ffd700', '#ff00cc', '#00ffff', '#ffffff', '#ff4d4d'];
+
+        function createConfetti() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                size: Math.random() * 8 + 4,
+                speed: Math.random() * 3 + 2,
+                angle: Math.random() * 2 * Math.PI
+            };
+        }
+
+        function initConfetti() {
+            for (let i = 0; i < 100; i++) {
+                confetti.push(createConfetti());
             }
             animateConfetti();
         }
 
         function animateConfetti() {
-            cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
-            confetti.forEach((p) => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            confetti.forEach((p, index) => {
                 p.y += p.speed;
-                cCtx.fillStyle = p.color;
-                cCtx.beginPath();
-                cCtx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-                cCtx.fill();
+                p.x += Math.sin(p.angle) * 2;
+                
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Reset if falls off screen
+                if (p.y > canvas.height) {
+                    confetti[index] = createConfetti();
+                }
             });
+
             requestAnimationFrame(animateConfetti);
         }
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>
